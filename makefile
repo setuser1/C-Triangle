@@ -7,6 +7,7 @@ C11_FEATURES := $(CURDIR)/test/c11_features.ctri
 FULL_C11 := $(CURDIR)/test/full_c11.ctri
 TEST_108 := $(CURDIR)/test/test-108.ctri
 TEST_109 := $(CURDIR)/test/test-109.ctri
+TYPEDEF_SIZE_T := $(CURDIR)/test/typedef_size_t.ctri
 PYINSTALLER_NAME := hypotenuse
 X86_64_ELF_NAME := hypotenuse-x86_64-elf
 X86_64_ELF_IMAGE ?= python:3.14-slim
@@ -48,6 +49,8 @@ typecheck:
 	@python3 src/main.py "$(TEST_108)" > /dev/null || (echo "FAILED: test-108.ctri" && exit 1)
 	@echo "  Checking: $(TEST_109)"
 	@python3 src/main.py "$(TEST_109)" > /dev/null || (echo "FAILED: test-109.ctri" && exit 1)
+	@echo "  Checking: $(TYPEDEF_SIZE_T)"
+	@python3 src/main.py "$(TYPEDEF_SIZE_T)" > /dev/null || (echo "FAILED: typedef_size_t.ctri" && exit 1)
 	@echo "  Checking: $(RETURNS)"
 	@echo "  Checking: $(DYNAM)"
 	@echo "  Checking: $(STRING)"
