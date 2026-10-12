@@ -12,13 +12,13 @@ install:
 		sudo mkdir -p /usr/lib/PLIBS; \
 		cp ./$(PYINSTALLER_NAME) /usr/local/bin/$(PYINSTALLER_NAME); \
 		chmod +x /usr/local/bin/$(PYINSTALLER_NAME); \
-		cp -r ./plstd /usr/lib/PLIBS/; \
+		cp -r ./bracket /usr/lib/PLIBS/; \
 		echo "Installed to /usr/local/bin/$(PYINSTALLER_NAME) and /usr/lib/PLIBS"; \
 	else \
 		mkdir -p ~/.local/bin; \
 		mkdir -p ~/.local/lib/PLIBS; \
 		cp ./$(PYINSTALLER_NAME) ~/.local/bin/$(PYINSTALLER_NAME); \
 		chmod +x ~/.local/bin/$(PYINSTALLER_NAME); \
-		cp -r ./plstd ~/.local/lib/PLIBS/; \
+		cp -r ./bracket ~/.local/lib/PLIBS/; \
 		echo "Installed to ~/.local/bin/$(PYINSTALLER_NAME) and ~/.local/lib/PLIBS"; \
 	fi

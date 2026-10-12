@@ -1,0 +1,192 @@
+space _re {
+    int _match_elem(char c, string pattern, int start) {
+        int pat_len = len(pattern);
+        if (start >= pat_len) return 0;
+        char p = pattern[start];
+
+        if (p == '[') {
+            int neg = 0;
+            int i = start + 1;
+            if (i < pat_len && pattern[i] == '^') {
+                neg = 1;
+                i = i + 1;
+            }
+            int matched = 0;
+            while (i < pat_len && pattern[i] != ']') {
+                char a = pattern[i];
+                if (i + 2 < pat_len && pattern[i + 1] == '-' && pattern[i + 2] != ']') {
+                    char b = pattern[i + 2];
+                    if (c >= a && c <= b) { matched = 1; break; }
+                    i = i + 3;
+                } else {
+                    if (c == a) { matched = 1; break; }
+                    i = i + 1;
+                }
+            }
+            if (neg) return !matched;
+            return matched;
+        }
+
+        if (p == '\\') {
+            if (start + 1 < pat_len) {
+                return c == pattern[start + 1];
+            }
+            return 0;
+        }
+
+        if (p == '.' && c != '\n') return 1;
+
+        return c == p;
+    }
+
+    int _elem_len(string pattern, int start) {
+        int pat_len = len(pattern);
+        if (start >= pat_len) return 1;
+
+        if (pattern[start] == '[') {
+            int i = start + 1;
+            while (i < pat_len && pattern[i] != ']') {
+                i = i + 1;
+            }
+            return i - start + 1;
+        }
+
+        if (pattern[start] == '\\') return start + 1 < pat_len ? 2 : 1;
+
+        return 1;
+    }
+}
+
+string find(string str, string pattern) {
+    int str_len = len(str);
+    int pat_len = len(pattern);
+
+    // Try matching at each start position
+    for (int start = 0; start <= str_len; start++) {
+        int si = start;
+        int pi = 0;
+        int ok = 1;
+
+        while (pi < pat_len) {
+            char pc = pattern[pi];
+
+            // Check if we ran out of string
+            if (si > str_len) { ok = 0; break; }
+            if (si == str_len) { ok = 0; break; }
+
+            char next = pi + 1 < pat_len ? pattern[pi + 1] : '\0';
+
+            // Handle * quantifier (zero or more)
+            if (next == '*') {
+                int elem_start = pi;
+                int elem_end = pi + _elem_len@_re(pattern, pi);
+                pi = elem_end + 1; // skip past *
+
+                // Greedy: find maximum possible match count
+                int max_count = 0;
+                int temp = si;
+                while (temp < str_len) {
+                    if (_match_elem@_re(str[temp], pattern, elem_start)) {
+                        max_count = max_count + 1;
+                        temp = temp + 1;
+                    } else break;
+                }
+
+                // Backtrack from max down to 0
+                int found = 0;
+                for (int count = max_count; count >= 0; count--) {
+                    int rsi = si + count;
+                    int rpi = pi;
+                    int rest_ok = 1;
+
+                    while (rpi < pat_len) {
+                        if (rsi >= str_len) { rest_ok = 0; break; }
+                        char rnext = rpi + 1 < pat_len ? pattern[rpi + 1] : '\0';
+                        if (rnext == '*') { rest_ok = 0; break; }
+
+                        int relem_len = _elem_len@_re(pattern, rpi);
+                        if (_match_elem@_re(str[rsi], pattern, rpi)) {
+                            rsi = rsi + 1;
+                            rpi = rpi + relem_len;
+                            continue;
+                        }
+                        rest_ok = 0; break;
+                    }
+
+                    if (rest_ok) {
+                        si = rsi;
+                        pi = rpi;
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (!found) { ok = 0; break; }
+                continue;
+            }
+
+            // Single element match (char, ., \x, or [...])
+            if (si >= str_len) { ok = 0; break; }
+            int elem_len = _elem_len@_re(pattern, pi);
+            if (_match_elem@_re(str[si], pattern, pi)) {
+                si = si + 1;
+                pi = pi + elem_len;
+                continue;
+            }
+            ok = 0; break;
+        }
+
+        if (ok && pi >= pat_len) {
+            string result;
+            for (int i = start; i < si; i++) {
+                result = result + str[i];
+            }
+            return result;
+        }
+    }
+
+    return "";
+}
+
+string split(string str, string pattern) {
+    string result;
+    string remaining = str;
+    int first = 1;
+
+    while (len(remaining) > 0) {
+        string match = find(remaining, pattern);
+        if (len(match) == 0) {
+            if (first) { return remaining; }
+            else { return result + "\n" + remaining; }
+        }
+
+        int match_len = len(match);
+        int pos = 0;
+        while (pos <= len(remaining) - match_len) {
+            int matched = 1;
+            for (int i = 0; i < match_len; i++) {
+                if (remaining[pos + i] != match[i]) { matched = 0; break; }
+            }
+            if (matched) break;
+            pos = pos + 1;
+        }
+
+        // Part before the match
+        string before;
+        for (int i = 0; i < pos; i++) {
+            before = before + remaining[i];
+        }
+
+        if (first) { result = before; first = 0; }
+        else { result = result + "\n" + before; }
+
+        // Advance past the match
+        string next;
+        for (int i = pos + match_len; i < len(remaining); i++) {
+            next = next + remaining[i];
+        }
+        remaining = next;
+    }
+
+    return result;
+}

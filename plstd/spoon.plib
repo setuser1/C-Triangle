@@ -1,0 +1,244 @@
+// spoon.plib — processes, threads, and synchronisation primitives
+// ===============================================================
+
+// Thread creation flags: VM shared, thread-group, TLS, futex-ready
+#define THREAD_FLAGS (CLONE_VM | CLONE_FS | CLONE_FILES | \
+                      CLONE_SIGHAND | CLONE_THREAD | \
+                      CLONE_SETTLS | CLONE_PARENT_SETTID | \
+                      CLONE_CHILD_CLEARTID | CLONE_CHILD_SETTID)
+
+// --- Syscall wrappers ------------------------------------------------
+
+asm int fork_p() {
+    syntax x86_64_elf
+    section .text
+    mov rax, 57
+    syscall
+    return
+}
+
+asm int execve(char* filename, string* argv, string* envp) {
+    syntax x86_64_elf
+    section .text
+    mov rax, 59
+    syscall
+    return
+}
+
+asm int wait_pid(int pid, int* status, int options) {
+    syntax x86_64_elf
+    section .text
+    mov rax, 61
+    syscall
+    return
+}
+
+asm int getpid_p() {
+    syntax x86_64_elf
+    section .text
+    mov rax, 39
+    syscall
+    return
+}
+
+asm int gettid_p() {
+    syntax x86_64_elf
+    section .text
+    mov rax, 186
+    syscall
+    return
+}
+
+// --- Internal helpers (space _sp) ------------------------------------
+
+space _sp {
+    // Clone flags
+    #define CLONE_VM            0x00000100
+    #define CLONE_FS            0x00000200
+    #define CLONE_FILES         0x00000400
+    #define CLONE_SIGHAND       0x00000800
+    #define CLONE_PIDFD         0x00001000
+    #define CLONE_PTRACE        0x00002000
+    #define CLONE_VFORK         0x00004000
+    #define CLONE_PARENT        0x00008000
+    #define CLONE_THREAD        0x00010000
+    #define CLONE_NEWNS         0x00020000
+    #define CLONE_SYSVSEM       0x00040000
+    #define CLONE_SETTLS        0x00080000
+    #define CLONE_PARENT_SETTID 0x00100000
+    #define CLONE_CHILD_CLEARTID 0x00200000
+    #define CLONE_DETACHED      0x00400000
+    #define CLONE_UNTRACED      0x00800000
+    #define CLONE_CHILD_SETTID  0x01000000
+    #define CLONE_NEWCGROUP     0x02000000
+    #define CLONE_NEWUTS        0x04000000
+    #define CLONE_NEWIPC        0x08000000
+    #define CLONE_NEWUSER       0x10000000
+    #define CLONE_NEWPID        0x20000000
+    #define CLONE_NEWNET        0x40000000
+    #define CLONE_IO            0x80000000
+
+    #define MAX_THREADS 64
+
+    struct _thread {
+        int tid;        // thread/process ID
+        string stack;   // thread stack allocation
+        string tls;     // thread-local storage area
+        string tid_area; // child TID futex area
+    };
+
+    int _am_child;                       // set by fork/clone children
+    struct _thread _threads[MAX_THREADS]; // tracked threads
+    int _threads_count;                  // current number of tracked threads
+    int _threads_lock;                   // mutex for thread table access
+
+    // Raw clone syscall
+    // 4th arg (child_tid) arrives in rcx but syscall needs it in r10
+    asm int clone_p(unsigned long flags, void* child_stack, int* parent_tid, int* child_tid, unsigned long tls) {
+        syntax x86_64_elf
+        section .text
+        mov rax, 56
+        mov r10, rcx
+        syscall
+        return
+    }
+
+    // Atomic exchange (used by mutex)
+    asm int atomic_xchg(int* ptr, int val) {
+        syntax x86_64_elf
+        section .text
+        mov eax, esi
+        xchg eax, [rdi]
+        return
+    }
+
+    // Futex wait (used by mutex)
+    // val arrives in rsi, but rsi must be set to FUTEX_WAIT (0) —
+    // move val to rdx (expected value) first.
+    asm int futex_wait(int* uaddr, int val) {
+        syntax x86_64_elf
+        section .text
+        mov rax, 202
+        mov rdx, rsi
+        mov rsi, 0
+        mov r10, 0
+        mov r8, 0
+        mov r9, 0
+        syscall
+        return
+    }
+
+    // Futex wake (used by mutex)
+    // count arrives in rsi, but rsi must be set to FUTEX_WAKE (1) —
+    // move count to rdx (wake count) first.
+    asm int futex_wake(int* uaddr, int count) {
+        syntax x86_64_elf
+        section .text
+        mov rax, 202
+        mov rdx, rsi
+        mov rsi, 1
+        mov r10, 0
+        mov r8, 0
+        mov r9, 0
+        syscall
+        return
+    }
+}
+
+// --- Process & thread helpers ----------------------------------------
+
+// Returns 0 if called from a fork child or clone thread, non-zero otherwise.
+int food() {
+    return !(_am_child@_sp || (gettid_p() != getpid_p()));
+}
+
+// Fork + execve a program.
+int spoon(char* path) {
+    int pid = fork_p();
+    if (pid == 0) {
+        _am_child@_sp = 1;
+        if (food() == 0) {
+            string argv[2];
+            argv[0] = path;
+            argv[1] = 0;
+            execve(path, argv, 0);
+        }
+    }
+    return pid;
+}
+
+// --- Threads ---------------------------------------------------------
+
+// Spawn one thread.
+void spawn_spoon() {
+    spawn_spoon(1);
+}
+
+// Spawn N threads. Children continue to their own food() gated code.
+void spawn_spoon(int count) {
+    for (int i = 0; i < count; i++) {
+        allocate int _tid[1];
+        allocate int _tls[16];
+        allocate char _stack[16384];
+
+        int pid = clone_p@_sp(THREAD_FLAGS, _stack + 16384, _tid, _tid, _tls);
+
+        if (pid != 0) {
+            mtx_lock(&_threads_lock@_sp);
+            for (int j = 0; j < MAX_THREADS@_sp; j++) {
+                if (_threads@_sp[j].tid == 0) {
+                    _threads@_sp[j].tid = pid;
+                    _threads@_sp[j].stack = _stack;
+                    _threads@_sp[j].tls = _tls;
+                    _threads@_sp[j].tid_area = _tid;
+                    _threads_count@_sp = _threads_count@_sp + 1;
+                    break;
+                }
+            }
+            mtx_unlock(&_threads_lock@_sp);
+        }
+    }
+}
+
+// Wait for all tracked threads to finish and free their resources.
+void spoon_sync() {
+    int status;
+    mtx_lock(&_threads_lock@_sp);
+    for (int i = 0; i < MAX_THREADS@_sp; i++) {
+        if (_threads@_sp[i].tid != 0) {
+            wait_pid(_threads@_sp[i].tid, &status, 0);
+            free(_threads@_sp[i].stack);
+            free(_threads@_sp[i].tls);
+            free(_threads@_sp[i].tid_area);
+            _threads@_sp[i].tid = 0;
+            _threads@_sp[i].stack = 0;
+            _threads@_sp[i].tls = 0;
+            _threads@_sp[i].tid_area = 0;
+        }
+    }
+    _threads_count@_sp = 0;
+    mtx_unlock(&_threads_lock@_sp);
+}
+
+// --- Mutex (futex-based) ---------------------------------------------
+
+void mtx_init(int* m) {
+    m[0] = 0;
+}
+
+void mtx_lock(int* m) {
+    while (1) {
+        int old = atomic_xchg@_sp(m, 1);
+        if (old == 0) return;
+        futex_wait@_sp(m, 1);
+    }
+}
+
+void mtx_unlock(int* m) {
+    m[0] = 0;
+    futex_wake@_sp(m, 1);
+}
+
+void mtx_destroy(int* m) {
+    m[0] = 0;
+}

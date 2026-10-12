@@ -20,7 +20,7 @@ int test_basic_calls() {
     return total;
 }
 
-int test_multiple_libs() {
+int main() {
     // Test using different libraries
     string s1 = "hello";
     string s2 = "world";

@@ -1,5 +1,5 @@
-void mem_test() {
-    string s = "auto-removed";
+int main() {
+    string s = "string";
     allocate string manual = "manual-alloc";
     string s2 = s;
     free(manual);

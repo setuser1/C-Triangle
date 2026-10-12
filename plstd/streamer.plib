@@ -1,10 +1,9 @@
 using "streamer_x86"
-using "streamer_arm64"
 
 #include <stddef.h>
+expose streams_impl_x86@streamer_x86
 
 space streams {
-#ifdef __x86_64__
     int sys_read(int fd, string buf, int count) {
         return sys_read@streams_impl_x86(fd, buf, count);
     }
@@ -24,30 +23,9 @@ space streams {
     int sys_unlink(string path) {
         return sys_unlink@streams_impl_x86(path);
     }
-#elif defined(__aarch64__) || defined(__ARM64__)
-    int sys_read(int fd, string buf, int count) {
-        return sys_read@streams_impl_arm64(fd, buf, count);
-    }
-
-    int sys_write(int fd, string buf, int count) {
-        return sys_write@streams_impl_arm64(fd, buf, count);
-    }
-
-    int sys_open(string path, int flags, int mode) {
-        return sys_open@streams_impl_arm64(path, flags, mode);
-    }
-
-    int sys_close(int fd) {
-        return sys_close@streams_impl_arm64(fd);
-    }
-
-    int sys_unlink(string path) {
-        return sys_unlink@streams_impl_arm64(path);
-    }
-#endif
 
     string read_file(int fd) {
-        dynam char buffer = [];
+        string buffer = [];
         char tmp[256];
         int n;
         while ((n = sys_read(fd, tmp, 256)) > 0) {

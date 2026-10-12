@@ -1935,11 +1935,7 @@ class CodeGen:
                     self._current_space = actual_prefix
                     for nested_decl in decl.declarations:
                         if isinstance(nested_decl, p.Function):
-                            # Avoid double-prefixing
-                            if nested_decl.name.startswith(f"{actual_prefix}_"):
-                                generated_name = nested_decl.name
-                            else:
-                                generated_name = f"{actual_prefix}_{nested_decl.name}"
+                            generated_name = f"{actual_prefix}_{nested_decl.name}"
                             if self._should_emit_plib_function(
                                 prefix,
                                 nested_decl.name,
@@ -1955,11 +1951,7 @@ class CodeGen:
                     self._current_space = None
                     self._space_local_functions = set()
                 elif isinstance(decl, p.Function):
-                    # Avoid double-prefixing
-                    if decl.name.startswith(f"{prefix}_"):
-                        generated_name = decl.name
-                    else:
-                        generated_name = f"{prefix}_{decl.name}"
+                    generated_name = f"{prefix}_{decl.name}"
                     if self._should_emit_plib_function(prefix, decl.name, generated_name):
                         before = len(self._used_functions)
                         self._scan_plib_function_dependencies(decl.body)
@@ -1974,16 +1966,13 @@ class CodeGen:
                 continue
 
             # Apply prefix to top-level declarations
-            # Avoid double-prefixing: if the name already starts with prefix_, don't add it again
             original_name = None
             if isinstance(decl, p.Function):
                 original_name = decl.name
-                if not decl.name.startswith(f"{prefix}_"):
-                    decl.name = f"{prefix}_{decl.name}"
+                decl.name = f"{prefix}_{decl.name}"
             elif isinstance(decl, p.Declaration):
                 original_name = decl.name
-                if not decl.name.startswith(f"{prefix}_"):
-                    decl.name = f"{prefix}_{decl.name}"
+                decl.name = f"{prefix}_{decl.name}"
 
             # Handle SpaceDecl - generate with prefix + namespace prefix
             if isinstance(decl, p.SpaceDecl):
@@ -2008,12 +1997,6 @@ class CodeGen:
                     if isinstance(nested_decl, p.Function):
                         original_name = nested_decl.name
                         generated_name = f"{actual_prefix}_{nested_decl.name}"
-                        if not self._should_emit_plib_function(
-                            prefix,
-                            original_name,
-                            generated_name,
-                        ):
-                            continue
                         # Track ORIGINAL name for space-local function call prefixing
                         self._space_local_functions.add(original_name)
                         # Update mapping: func -> (lib, lib_func)
@@ -2030,10 +2013,7 @@ class CodeGen:
                     elif isinstance(nested_decl, p.AsmBlock):
                         if nested_decl.is_function and nested_decl.name:
                             original_name = nested_decl.name
-                            if nested_decl.name.startswith(f"{actual_prefix}_"):
-                                generated_name = nested_decl.name
-                            else:
-                                generated_name = f"{actual_prefix}_{nested_decl.name}"
+                            generated_name = f"{actual_prefix}_{nested_decl.name}"
                             if not self._should_emit_plib_function(
                                 prefix,
                                 original_name,
@@ -2079,12 +2059,18 @@ class CodeGen:
                 lib_key = prefix  # Use the computed prefix
                 is_exposed = lib_key in self._exposed_libs
                 if isinstance(decl, p.Function) and not is_exposed:
-                    if not self._should_emit_plib_function(
-                        prefix,
-                        original_name or decl.name,
-                        decl.name,
+                    # Get the bare function name (original before prefixing)
+                    # The function name is already prefixed as "prefix_funcname"
+                    if decl.name.startswith(f"{lib_key}_"):
+                        bare_name = decl.name[len(lib_key) + 1 :]
+                    else:
+                        bare_name = decl.name
+                    # Check if function is used: any form of the name
+                    if (
+                        bare_name not in self._used_functions
+                        and decl.name not in self._used_functions
                     ):
-                        continue
+                        continue  # Skip unused function
 
                 self._gen_node(decl)
 
@@ -3296,9 +3282,6 @@ class CodeGen:
                 
                 # Use the dynam struct name as the field type
                 self._emit(f"{struct_name} {field_name};")
-            elif field_type == "string":
-                # string in struct maps to char*
-                self._emit(f"char* {field_name};")
             else:
                 # For regular types, apply standard type mapping
                 mapped_type = self._map_type(field_type)

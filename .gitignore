@@ -20,6 +20,7 @@
 .zed/
 .zed 2/
 .cursor/
+.opencode/
 
 # User-specific stuff
 .idea/**/workspace.xml

@@ -15,7 +15,7 @@ space string_impl_x86 {
         je .done
         jmp .loop
     .done:
-        ret
+        return
     }
 
     asm string __strcpy_asm(string dest, string src) {
@@ -31,7 +31,7 @@ space string_impl_x86 {
         inc rdx
         test r8b, r8b
         jne .loop
-        ret
+        return
     }
 
     asm string __strcat_asm(string dest, string src) {
@@ -53,7 +53,7 @@ space string_impl_x86 {
         inc rdx
         test r8b, r8b
         jne .copy
-        ret
+        return
     }
 
     asm string __strdup_asm(string s) {
@@ -84,10 +84,10 @@ space string_impl_x86 {
         inc r9
         test al, al
         jne .copy_loop
-        ret
+        return
     .error:
         mov rax, 0
-        ret
+        return
     }
 
     asm int __strchr_asm(string s, char c) {
@@ -108,10 +108,10 @@ space string_impl_x86 {
     .found:
         mov rax, rcx
         sub rax, r8
-        ret
+        return
     .not_found:
         mov rax, -1
-        ret
+        return
     }
 
     asm int __strstr_asm(string haystack, string needle) {
@@ -139,11 +139,11 @@ space string_impl_x86 {
         test al, al
         jne .outer_loop
         mov rax, -1
-        ret
+        return
     .found:
         mov rax, rcx
         sub rax, r8
-        ret
+        return
     }
 
     asm int __strlen_asm(string s) {
@@ -160,7 +160,7 @@ space string_impl_x86 {
     .done:
         mov rax, rcx
         sub rax, s
-        ret
+        return
     }
 
     asm string __strncpy_asm(string dest, string src, int n) {
@@ -182,7 +182,7 @@ space string_impl_x86 {
         test r9b, r9b
         jne .loop
     .done:
-        ret
+        return
     }
 
     asm string __strncat_asm(string dest, string src, int n) {
@@ -210,7 +210,7 @@ space string_impl_x86 {
         test r10b, r10b
         jne .copy
     .copy_done:
-        ret
+        return
     }
 
     asm int __strncmp_asm(string a, string b, int n) {
@@ -235,6 +235,6 @@ space string_impl_x86 {
         jmp .loop
     .done:
         movsx eax, al
-        ret
+        return
     }
 }

@@ -126,3 +126,4 @@ E904|Cannot open file {file} for reading
 E904|File {file} does not exist or is not accessible
 E905|Out of memory during compilation
 E905|Memory allocation failed at {line}:{col}
+E906|Somehow you beat us to the error

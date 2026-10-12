@@ -1,7 +1,0 @@
-ctriangle.zip
-ctriangle-1.0.0.vsix
-node_modules/**
-.vscode/launch.json
-tsconfig.json
-src/**
-*.map
