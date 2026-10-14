@@ -1675,22 +1675,36 @@ class Parser:
             )
 
     def parse_typedef(self) -> Node:
-        """Parse a typedef declaration."""
+        """Parse a typedef declaration.
+
+        The alias sits immediately before the terminating semicolon. Some aliases
+        are tokenized as keyword-like type tokens (e.g. ``size_t``), so we must
+        stop before consuming them as part of the actual type.
+        """
         self.expect("TYPEDEF")
+
         actual_type = ""
         while True:
             tok = self.peek()
+            if tok[0] == "SEMICOLON":
+                raise SyntaxError("Missing typedef alias name")
+
+            # If the next token is a semicolon, the current token is the alias;
+            # do not consume it as part of the underlying type.
+            if self.i + 1 < len(self.tokens) and self.tokens[self.i + 1][0] == "SEMICOLON":
+                break
+
             if tok[0] in _BASE_TYPE_TOKENS:
                 actual_type += self.advance()[1] + " "
                 if self.peek()[0] in _BASE_TYPE_TOKENS:
                     actual_type += self.advance()[1] + " "
-            elif tok[0] == "IDENTIFIER":
-                # Check if this is the alias (next token is SEMICOLON)
-                # In that case, don't consume it as part of the type
-                if self.i + 1 < len(self.tokens) and self.tokens[self.i + 1][0] == "SEMICOLON":
-                    break
+                continue
+
+            if tok[0] == "IDENTIFIER":
                 actual_type += self.advance()[1] + " "
-            elif tok[0] == "STRUCT":
+                continue
+
+            if tok[0] == "STRUCT":
                 actual_type += self.advance()[1]
                 if self.peek()[0] == "IDENTIFIER":
                     actual_type += " " + self.advance()[1]
@@ -1704,12 +1718,13 @@ class Parser:
                         elif inner_tok[0] == "RBRACE":
                             depth -= 1
                         actual_type += " " + self.advance()[1]
-                    # BUG FIX: Don't consume the typedef alias here
-                    # if self.peek()[0] == "IDENTIFIER":
-                    #     actual_type += " " + self.advance()[1]
-            elif tok[0] == "MULTIPLY":
+                continue
+
+            if tok[0] == "MULTIPLY":
                 actual_type += self.advance()[1]
-            elif tok[0] == "LPAREN":
+                continue
+
+            if tok[0] == "LPAREN":
                 saved_i = self.i
                 if (
                     self.i + 1 < len(self.tokens)
@@ -1742,22 +1757,14 @@ class Parser:
                     self._typedefs[alias] = actual_type
                     self.expect("SEMICOLON")
                     return Typedef(actual_type, alias)
-                else:
-                    self.i = saved_i
-                    break
-            else:
+                self.i = saved_i
                 break
-            if self.peek()[0] == "SEMICOLON":
-                break
-            # Check if next token would be semicolon - if so, we're done with type
-            if self.peek()[0] == "SEMICOLON":
-                break
+
+            break
+
         actual_type = actual_type.strip()
         actual_type = self._consume_pointer_stars(actual_type)
-        # If there's no more type to parse, what we have is the alias
-        # The last identifier consumed should be the actual_type if we broke due to SEMICOLON lookahead
-        # But we need to get the final alias
-        alias = self.expect("IDENTIFIER")[1]
+        alias = self.advance()[1]
         self.expect("SEMICOLON")
         self._typedefs[alias] = actual_type
         return Typedef(actual_type, alias)
