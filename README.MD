@@ -1,14 +1,14 @@
 # The Hypotenuse Compiler
 
 <p align="center">
-  <img src="assets/logo.png" alt="C△ Logo"/>
+  <img src="assets/logo.png" alt="i++ Logo"/>
 </p>
 
-## What is C△?
+## What is i++?
 
-Hypotenuse is the compiler for **C△ (C Triangle)** — a new systems programming language born out of frustration with C's lack of features and C++'s overwhelming complexity.
+Hypotenuse is the compiler for **i++ (i++)** — a new systems programming language born out of frustration with C's lack of features and C++'s overwhelming complexity.
 
-C△ compiles to **C + assembly**, uses **GCC and NASM**, and targets **Linux ELF x86_64** natively. It's C-compatible, kinda modern? And designed to be learnable.
+i++ compiles to **C + assembly**, uses **GCC and NASM**, and targets **Linux ELF x86_64** natively. It's C-compatible, kinda modern? And designed to be learnable.
 
 > _The future of C and the end of C++_
 
@@ -16,7 +16,7 @@ C△ compiles to **C + assembly**, uses **GCC and NASM**, and targets **Linux EL
 
 ## Supported Architectures
 
-The C△ compiler and standard library support multiple architectures:
+The i++ compiler and standard library support multiple architectures:
 
 | Architecture | Platform | Format   | Status  |
 | ------------ | -------- | -------- | ------- |
@@ -26,9 +26,9 @@ The C△ compiler and standard library support multiple architectures:
 
 ### Standard Library (plstd) Architecture Support
 
-- **printd.plib** — Type-aware printing with conditional compilation for both x86_64 Linux
-- **string.plib** — String operations (strcmp, strcpy, strcat, etc.) optimized for each architecture
-- **streamer.plib** — File I/O and syscall wrappers supporting both architectures
+- **printd.ih** — Type-aware printing with conditional compilation for both x86_64 Linux
+- **string.ih** — String operations (strcmp, strcpy, strcat, etc.) optimized for each architecture
+- **streamer.ih** — File I/O and syscall wrappers supporting both architectures
 - **Syscalls** — All syscalls use platform-specific conventions:
   - x86_64: Linux syscall ABI (`mov rax, N; syscall`)
 
@@ -55,7 +55,7 @@ make full-install-x86_64-elf
 
 ### Using Apple's `container` CLI on macOS (ARM64)
 
-For macOS users with Apple Silicon, you can use Apple's native `container` CLI instead of Docker to build and run the C△ compiler. The `container` tool is optimized for Apple Silicon and provides native virtualization.
+For macOS users with Apple Silicon, you can use Apple's native `container` CLI instead of Docker to build and run the i++ compiler. The `container` tool is optimized for Apple Silicon and provides native virtualization.
 
 #### Installation
 
@@ -80,13 +80,13 @@ This will create `hypotenuse-container` in the `dist/` directory.
 Use `make container-run` to run the compiler inside the container:
 
 ```bash
-make container-run test/baseline.ctri
+make container-run test/baseline.ipp
 ```
 
 Or run a specific test file:
 
 ```bash
-make container-run test/baseline.ctri -p
+make container-run test/baseline.ipp -p
 ```
 
 #### Running Tests

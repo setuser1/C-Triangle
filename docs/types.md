@@ -1,10 +1,10 @@
-# C△ Type System
+# i++ Type System
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-C△ supports all C11 primitive types plus several new first-class types designed for modern systems programming.
+i++ supports all C11 primitive types plus several new first-class types designed for modern systems programming.
 
 ---
 
@@ -25,7 +25,7 @@ C△ supports all C11 primitive types plus several new first-class types designe
 
 ## Pointers
 
-C△ supports standard C-style pointers with the `*` syntax.
+i++ supports standard C-style pointers with the `*` syntax.
 
 ### Declaration
 
@@ -46,7 +46,7 @@ int y = *ptr;       // Dereference operator *
 
 ---
 
-## C△ New Types
+## i++ New Types
 
 ### `string` — First-class string
 

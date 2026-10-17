@@ -1,10 +1,10 @@
-# C△ Error Reference
+# i++ Error Reference
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-This document covers all compiler and runtime errors produced by the Hypotenuse Compiler. C△ errors include **personality messages** — randomized, community-contributed flavor text that makes errors a little more human.
+This document covers all compiler and runtime errors produced by the Hypotenuse Compiler. i++ errors include **personality messages** — randomized, community-contributed flavor text that makes errors a little more human.
 
 ---
 

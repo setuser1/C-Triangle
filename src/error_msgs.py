@@ -1,4 +1,4 @@
-"""Error messages for the C△ compiler.
+"""Error messages for the i++ compiler.
 
 Error codes are organized by category:
 - E0xx: Syntax errors

@@ -1,10 +1,10 @@
-# C△ Language Reference
+# i++ Language Reference
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="180"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="180"/>
 </p>
 
-Welcome to the official documentation for the **C△ (C Triangle)** programming language and the **Hypotenuse Compiler**.
+Welcome to the official documentation for the **i++ (i++)** programming language and the **Hypotenuse Compiler**.
 
 ---
 
@@ -14,14 +14,14 @@ Welcome to the official documentation for the **C△ (C Triangle)** programming 
 # Install dependencies
 make install
 
-# Compile a C△ source file
-python3 src/main.py hello.ctri
+# Compile a i++ source file
+python3 src/main.py hello.ipp
 
 # Debug: view tokens and scope graph
-python3 src/main.py -t hello.ctri
+python3 src/main.py -t hello.ipp
 
 # Print structure graph
-python3 src/main.py -p hello.ctri
+python3 src/main.py -p hello.ipp
 ```
 
 ---
@@ -41,11 +41,11 @@ python3 src/main.py -p hello.ctri
 
 ---
 
-## About C△
+## About i++
 
-C△ is a systems programming language that extends C11 with modern features while maintaining 100% C11 compatibility (minus a small deprecated list). It compiles to C and assembly, using GCC and NASM to produce native Linux ELF x86_64 binaries.
+i++ is a systems programming language that extends C11 with modern features while maintaining 100% C11 compatibility (minus a small deprecated list). It compiles to C and assembly, using GCC and NASM to produce native Linux ELF x86_64 binaries.
 
-C△ is designed around three principles:
+i++ is designed around three principles:
 
 - **Explicit over implicit** — nothing happens without you knowing about it
 - **Simple over clever** — clean syntax that stays close to C's spirit

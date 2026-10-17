@@ -1,10 +1,10 @@
-# C△ Keyword Reference
+# i++ Keyword Reference
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-This document lists all keywords in C△, their purpose, and basic usage. Keywords marked "_future_" are planned but not yet implemented.
+This document lists all keywords in i++, their purpose, and basic usage. Keywords marked "_future_" are planned but not yet implemented.
 
 ---
 
@@ -99,7 +99,7 @@ This document lists all keywords in C△, their purpose, and basic usage. Keywor
 
 ## Deprecated Keywords
 
-These C11 keywords are **not supported** in C△ and will raise a `SyntaxError`:
+These C11 keywords are **not supported** in i++ and will raise a `SyntaxError`:
 
 | Keyword                | Reason                     |
 | ---------------------- | -------------------------- |

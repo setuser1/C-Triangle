@@ -10,7 +10,7 @@ update/addition:
       - any-glob-to-any-file:
           - '**/*.py'
           - '**/*.txt'
-          - '**/*.ctri'
+          - '**/*.ipp'
           - 'Makefile'
           - '.gitignore'
           - '.gitattributes'

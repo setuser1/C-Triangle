@@ -4,7 +4,7 @@
     {
       "type": "gdb",
       "request": "launch",
-      "name": "Debug C△ Executable",
+      "name": "Debug i++ Executable",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
       "args": [],
       "cwd": "${fileDirname}",

@@ -1,4 +1,0 @@
-void printf(string value) {
-    len(value);
-    return;
-}

@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "C△ (C Triangle)",
+  "name": "i++",
   "patterns": [
     { "include": "#comments" },
     { "include": "#preprocessor" },
@@ -19,42 +19,42 @@
     "comments": {
       "patterns": [
         {
-          "name": "comment.block.ctriangle",
+          "name": "comment.block.ippangle",
           "begin": "/\\*",
           "end": "\\*/"
         },
         {
-          "name": "comment.line.double-slash.ctriangle",
+          "name": "comment.line.double-slash.ippangle",
           "begin": "//",
           "end": "$"
         }
       ]
     },
     "preprocessor": {
-      "name": "meta.preprocessor.ctriangle",
+      "name": "meta.preprocessor.ippangle",
       "match": "^\\s*(#\\s*(?:include|define|undef|ifdef|ifndef|if|elif|else|endif|pragma|error|warning|line))\\b(.*)",
       "captures": {
-        "1": { "name": "keyword.control.directive.ctriangle" },
-        "2": { "name": "string.unquoted.preprocessor.ctriangle" }
+        "1": { "name": "keyword.control.directive.ippangle" },
+        "2": { "name": "string.unquoted.preprocessor.ippangle" }
       }
     },
     "strings": {
       "patterns": [
         {
-          "name": "string.quoted.double.ctriangle",
+          "name": "string.quoted.double.ippangle",
           "begin": "\"",
           "end": "\"",
           "patterns": [
-            { "name": "constant.character.escape.ctriangle", "match": "\\\\." },
-            { "name": "constant.other.format-specifier.ctriangle", "match": "%[diouxXeEfFgGcspk%]" }
+            { "name": "constant.character.escape.ippangle", "match": "\\\\." },
+            { "name": "constant.other.format-specifier.ippangle", "match": "%[diouxXeEfFgGcspk%]" }
           ]
         },
         {
-          "name": "string.quoted.single.ctriangle",
+          "name": "string.quoted.single.ippangle",
           "begin": "'",
           "end": "'",
           "patterns": [
-            { "name": "constant.character.escape.ctriangle", "match": "\\\\." }
+            { "name": "constant.character.escape.ippangle", "match": "\\\\." }
           ]
         }
       ]
@@ -63,95 +63,95 @@
       "patterns": [
         {
           "comment": "using \"plstd/module\" — import a plstd module by path",
-          "name": "meta.import.path.ctriangle",
+          "name": "meta.import.path.ippangle",
           "match": "\\b(using)\\s+(\"[^\"]+\")",
           "captures": {
-            "1": { "name": "keyword.control.import.ctriangle" },
-            "2": { "name": "string.quoted.double.import.ctriangle" }
+            "1": { "name": "keyword.control.import.ippangle" },
+            "2": { "name": "string.quoted.double.import.ippangle" }
           }
         },
         {
           "comment": "using <lib> — import all from a system library",
-          "name": "meta.import.all.ctriangle",
+          "name": "meta.import.all.ippangle",
           "match": "\\b(using)\\s+(<[^>]+>)",
           "captures": {
-            "1": { "name": "keyword.control.import.ctriangle" },
-            "2": { "name": "string.quoted.other.import.ctriangle" }
+            "1": { "name": "keyword.control.import.ippangle" },
+            "2": { "name": "string.quoted.other.import.ippangle" }
           }
         },
         {
           "comment": "using name from <lib> or \"lib\" — import a named symbol",
-          "name": "meta.import.from.ctriangle",
+          "name": "meta.import.from.ippangle",
           "match": "\\b(using)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+(from)\\s+(\"[^\"]+\"|<[^>]+>)",
           "captures": {
-            "1": { "name": "keyword.control.import.ctriangle" },
-            "2": { "name": "entity.name.import.symbol.ctriangle" },
-            "3": { "name": "keyword.control.import.ctriangle" },
-            "4": { "name": "string.quoted.double.import.ctriangle" }
+            "1": { "name": "keyword.control.import.ippangle" },
+            "2": { "name": "entity.name.import.symbol.ippangle" },
+            "3": { "name": "keyword.control.import.ippangle" },
+            "4": { "name": "string.quoted.double.import.ippangle" }
           }
         },
         {
           "comment": "using scope&var — intra-file immutable reference to a scoped variable",
-          "name": "meta.import.scope.ctriangle",
+          "name": "meta.import.scope.ippangle",
           "match": "\\b(using)\\s+([A-Za-z_][A-Za-z0-9_]*)(&)([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.control.import.ctriangle" },
-            "2": { "name": "entity.name.scope.ctriangle" },
-            "3": { "name": "keyword.operator.ctriangle" },
-            "4": { "name": "variable.other.ctriangle" }
+            "1": { "name": "keyword.control.import.ippangle" },
+            "2": { "name": "entity.name.scope.ippangle" },
+            "3": { "name": "keyword.operator.ippangle" },
+            "4": { "name": "variable.other.ippangle" }
           }
         },
         {
           "comment": "expose lib@module — globalizes one module from a library into the current scope",
-          "name": "meta.expose.module.ctriangle",
+          "name": "meta.expose.module.ippangle",
           "match": "\\b(expose)\\s+([A-Za-z_][A-Za-z0-9_]*)(@)([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.control.expose.ctriangle" },
-            "2": { "name": "entity.name.namespace.ctriangle" },
-            "3": { "name": "keyword.operator.namespace.ctriangle" },
-            "4": { "name": "entity.name.module.ctriangle" }
+            "1": { "name": "keyword.control.expose.ippangle" },
+            "2": { "name": "entity.name.namespace.ippangle" },
+            "3": { "name": "keyword.operator.namespace.ippangle" },
+            "4": { "name": "entity.name.module.ippangle" }
           }
         },
         {
           "comment": "expose name — globalizes an entire library or namespace into the current scope",
-          "name": "meta.expose.ctriangle",
+          "name": "meta.expose.ippangle",
           "match": "\\b(expose)\\s+([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.control.expose.ctriangle" },
-            "2": { "name": "entity.name.namespace.ctriangle" }
+            "1": { "name": "keyword.control.expose.ippangle" },
+            "2": { "name": "entity.name.namespace.ippangle" }
           }
         },
         {
-          "comment": "space name — declares a named namespace block in a .plib library file",
-          "name": "meta.namespace.ctriangle",
+          "comment": "space name — declares a named namespace block in a .ih library file",
+          "name": "meta.namespace.ippangle",
           "match": "\\b(space)\\s+([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.declaration.namespace.ctriangle" },
-            "2": { "name": "entity.name.namespace.ctriangle" }
+            "1": { "name": "keyword.declaration.namespace.ippangle" },
+            "2": { "name": "entity.name.namespace.ippangle" }
           }
         }
       ]
     },
     "deprecated": {
-      "comment": "C11 keywords removed in C△ — flagged as invalid",
-      "name": "invalid.deprecated.ctriangle",
+      "comment": "C11 keywords removed in i++ — flagged as invalid",
+      "name": "invalid.deprecated.ippangle",
       "match": "\\b(restrict|_Bool|_Complex|_Imaginary)\\b"
     },
     "ctri-keywords": {
       "patterns": [
         {
-          "comment": "C△ import/module keywords active in current build",
-          "name": "keyword.control.ctriangle",
+          "comment": "i++ import/module keywords active in current build",
+          "name": "keyword.control.ippangle",
           "match": "\\b(using|expose|from|as|space|namespace|overwrite)\\b"
         },
         {
-          "comment": "C△ memory and structure keywords active in current build",
-          "name": "keyword.declaration.ctriangle",
+          "comment": "i++ memory and structure keywords active in current build",
+          "name": "keyword.declaration.ippangle",
           "match": "\\b(allocate|autoremove|free|asm|self|init|end)\\b"
         },
         {
-          "comment": "C△ future keywords — planned but not yet implemented",
-          "name": "keyword.other.future.ctriangle",
+          "comment": "i++ future keywords — planned but not yet implemented",
+          "name": "keyword.other.future.ippangle",
           "match": "\\b(auto|dynam|tuple|typed|string|lamb|Typed|Worded)\\b"
         }
       ]
@@ -159,82 +159,82 @@
     "types": {
       "patterns": [
         {
-          "name": "storage.type.ctriangle",
+          "name": "storage.type.ippangle",
           "match": "\\b(int|char|void|float|double|short|long|signed|unsigned|size_t|struct|union|enum|typedef)\\b"
         },
         {
-          "name": "storage.modifier.ctriangle",
+          "name": "storage.modifier.ippangle",
           "match": "\\b(const|volatile|inline|register)\\b"
         },
         {
-          "name": "storage.class.ctriangle",
+          "name": "storage.class.ippangle",
           "match": "\\b(static|extern)\\b"
         },
         {
-          "name": "storage.type.custom.ctriangle",
+          "name": "storage.type.custom.ippangle",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
         }
       ]
     },
     "keywords": {
-      "name": "keyword.control.c11.ctriangle",
+      "name": "keyword.control.c11.ippangle",
       "match": "\\b(if|else|while|for|do|switch|case|default|break|continue|return|goto|sizeof|_Noreturn|_Generic|_Alignof|_Alignas)\\b"
     },
     "numbers": {
       "patterns": [
-        { "name": "constant.numeric.hex.ctriangle", "match": "\\b0[xX][0-9a-fA-F]+[uUlL]*\\b" },
-        { "name": "constant.numeric.binary.ctriangle", "match": "\\b0[bB][01]+[uUlL]*\\b" },
-        { "name": "constant.numeric.float.ctriangle", "match": "\\b\\d+\\.\\d+[fFlL]?\\b" },
-        { "name": "constant.numeric.integer.ctriangle", "match": "\\b\\d+[uUlL]*\\b" }
+        { "name": "constant.numeric.hex.ippangle", "match": "\\b0[xX][0-9a-fA-F]+[uUlL]*\\b" },
+        { "name": "constant.numeric.binary.ippangle", "match": "\\b0[bB][01]+[uUlL]*\\b" },
+        { "name": "constant.numeric.float.ippangle", "match": "\\b\\d+\\.\\d+[fFlL]?\\b" },
+        { "name": "constant.numeric.integer.ippangle", "match": "\\b\\d+[uUlL]*\\b" }
       ]
     },
     "namespace-access": {
       "comment": "func@namespace — explicit access to a member of a namespace or plstd module",
-      "name": "meta.namespace.access.ctriangle",
+      "name": "meta.namespace.access.ippangle",
       "match": "([A-Za-z_][A-Za-z0-9_]*)(@)([A-Za-z_][A-Za-z0-9_]*)",
       "captures": {
-        "1": { "name": "entity.name.function.ctriangle" },
-        "2": { "name": "keyword.operator.namespace.ctriangle" },
-        "3": { "name": "entity.name.namespace.ctriangle" }
+        "1": { "name": "entity.name.function.ippangle" },
+        "2": { "name": "keyword.operator.namespace.ippangle" },
+        "3": { "name": "entity.name.namespace.ippangle" }
       }
     },
     "operators": {
       "patterns": [
         {
-          "comment": "Bitwise NOT operator — ~ is NOT a namespace accessor in C△",
-          "name": "keyword.operator.bitwise.ctriangle",
+          "comment": "Bitwise NOT operator — ~ is NOT a namespace accessor in i++",
+          "name": "keyword.operator.bitwise.ippangle",
           "match": "~"
         },
         {
           "comment": "@ is the namespace accessor operator",
-          "name": "keyword.operator.namespace.ctriangle",
+          "name": "keyword.operator.namespace.ippangle",
           "match": "@"
         },
-        { "name": "keyword.operator.comparison.ctriangle", "match": "==|!=|<=|>=|<|>" },
-        { "name": "keyword.operator.logical.ctriangle", "match": "&&|\\|\\||!" },
-        { "name": "keyword.operator.assignment.ctriangle", "match": "\\+=|-=|\\*=|/=|%=|=" },
-        { "name": "keyword.operator.arithmetic.ctriangle", "match": "\\+\\+|--|\\*\\*|\\+|-|\\*|/|%" },
-        { "name": "keyword.operator.bitwise.ctriangle", "match": "<<|>>|&|\\||\\^" },
-        { "name": "keyword.operator.pointer.ctriangle", "match": "->|\\*(?=[A-Za-z_])|&(?=[A-Za-z_])" },
-        { "name": "keyword.operator.ternary.ctriangle", "match": "\\?" }
+        { "name": "keyword.operator.comparison.ippangle", "match": "==|!=|<=|>=|<|>" },
+        { "name": "keyword.operator.logical.ippangle", "match": "&&|\\|\\||!" },
+        { "name": "keyword.operator.assignment.ippangle", "match": "\\+=|-=|\\*=|/=|%=|=" },
+        { "name": "keyword.operator.arithmetic.ippangle", "match": "\\+\\+|--|\\*\\*|\\+|-|\\*|/|%" },
+        { "name": "keyword.operator.bitwise.ippangle", "match": "<<|>>|&|\\||\\^" },
+        { "name": "keyword.operator.pointer.ippangle", "match": "->|\\*(?=[A-Za-z_])|&(?=[A-Za-z_])" },
+        { "name": "keyword.operator.ternary.ippangle", "match": "\\?" }
       ]
     },
     "identifiers": {
       "patterns": [
         {
-          "name": "support.function.plstd.ctriangle",
+          "name": "support.function.plstd.ippangle",
           "match": "\\b(printd|printfs|len)\\b"
         },
         {
-          "name": "variable.other.ctriangle",
+          "name": "variable.other.ippangle",
           "match": "\\b[a-z_][a-zA-Z0-9_]*\\b"
         },
         {
-          "name": "entity.name.function.ctriangle",
+          "name": "entity.name.function.ippangle",
           "match": "\\b[A-Z][a-zA-Z0-9_]*\\s*(?=\\()"
         }
       ]
     }
   },
-  "scopeName": "source.ctriangle"
+  "scopeName": "source.ippangle"
 }

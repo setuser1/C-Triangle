@@ -1,7 +1,7 @@
 {
   "name": "ctriangle",
-  "displayName": "C△ (C Triangle)",
-  "description": "Language support for C△ (C Triangle) - a C superset with namespaces, dynamic arrays, and first-class strings",
+  "displayName": "i++",
+  "description": "Language support for i++ - a C superset with namespaces, dynamic arrays, and first-class strings",
   "version": "1.0.0",
   "publisher": "ctriangle",
   "engines": {
@@ -22,8 +22,8 @@
     "languages": [
       {
         "id": "ctriangle",
-        "aliases": ["C△", "C Triangle"],
-        "extensions": [".ctri", ".plib"],
+        "aliases": ["i++"],
+        "extensions": [".ipp", ".ih"],
         "configuration": "./language-configuration.json"
       }
     ],
@@ -37,7 +37,7 @@
     "iconThemes": [
       {
         "id": "ctriangle-icons",
-        "label": "C△ Icons",
+        "label": "i++ Icons",
         "path": "./icons/ctriangle-icon-theme.json"
       }
     ],
@@ -46,20 +46,20 @@
       "tasks": [
         {
           "type": "shell",
-          "label": "Compile C△ File",
+          "label": "Compile i++ File",
           "command": "hypotenuse",
           "args": ["-c", "${file}"],
           "problemMatcher": [],
           "group": "build",
-          "detail": "Compile the current C△ file to executable"
+          "detail": "Compile the current i++ file to executable"
         },
         {
           "type": "shell",
-          "label": "Run C△ File",
+          "label": "Run i++ File",
           "command": "${fileDirname}/${fileBasenameNoExtension}",
           "problemMatcher": [],
           "group": "test",
-          "dependsOn": ["Compile C△ File"],
+          "dependsOn": ["Compile i++ File"],
           "detail": "Run the compiled executable"
         }
       ]

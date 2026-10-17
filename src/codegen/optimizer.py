@@ -1,4 +1,4 @@
-"""Optimizer for C△ compiler. C11 compliant."""
+"""Optimizer for i++ compiler. C11 compliant."""
 
 from __future__ import annotations
 
@@ -437,7 +437,7 @@ class Optimizer:
     def _generate_report(self) -> str:
         """Generate the optimization report."""
         lines = []
-        lines.append("=== C△ Optimizer Report ===")
+        lines.append("=== i++ Optimizer Report ===")
         lines.append("")
         if self.layouts:
             lines.append("Struct Layout Analysis:")

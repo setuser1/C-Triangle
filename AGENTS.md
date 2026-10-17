@@ -11,15 +11,15 @@
 | Action                      | Command                                          | Description                                                   |
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------------------- |
 | Install dependencies        | `make install`                                   | Installs `pytest`, `pyflakes`.                                |
-| Run baseline (generates C)  | `make run`                                       | Compiles `test/baseline.ctri`, prints generated C to stdout.  |
-| Compile with GCC            | `python3 src/main.py -c -C "FLAGS" file.ctri`   | Compile `.ctri` to executable. Use `-C` for extra cflags.     |
-| Print tokens (debug)        | `python3 src/main.py -t test/<file>.ctri`        | Lexes the file and prints the token stream.                   |
-| Print structure graph       | `python3 src/main.py -p test/<file>.ctri`        | Prints the Callee/Caller/Scope graph.                         |
-| Show generated assembly     | `python3 src/main.py -a test/<file>.ctri`        | Shows `.asm` output for `asm` blocks.                         |
+| Run baseline (generates C)  | `make run`                                       | Compiles `test/baseline.ipp`, prints generated C to stdout.  |
+| Compile with GCC            | `python3 src/main.py -c -C "FLAGS" file.ipp`   | Compile `.ipp` to executable. Use `-C` for extra cflags.     |
+| Print tokens (debug)        | `python3 src/main.py -t test/<file>.ipp`        | Lexes the file and prints the token stream.                   |
+| Print structure graph       | `python3 src/main.py -p test/<file>.ipp`        | Prints the Callee/Caller/Scope graph.                         |
+| Show generated assembly     | `python3 src/main.py -a test/<file>.ipp`        | Shows `.asm` output for `asm` blocks.                         |
 | Lint                        | `make lint`                                      | Runs **pyflakes** against `src/*.py`.                         |
-| Type-check / regression     | `make typecheck`                                 | Executes the compiler on every `.ctri` test file.             |
+| Type-check / regression     | `make typecheck`                                 | Executes the compiler on every `.ipp` test file.             |
 | Full test suite             | `make test`                                      | Lint → type-check → regression checks.                        |
-| Run a single test           | `python3 src/main.py test/<file>.ctri`           | Compile one `.ctri` fixture directly.                         |
+| Run a single test           | `python3 src/main.py test/<file>.ipp`           | Compile one `.ipp` fixture directly.                         |
 | Clean CI build              | `make all`                                       | `install → lint → test`; used by GitHub CI.                   |
 | Build binary                | `make build`                                     | Build PyInstaller executable (`dist/hypotenuse`).             |
 | Install binary              | `make full-install`                              | Install to `/usr/local/bin` or `~/.local/bin`.                |
@@ -41,8 +41,8 @@
 ## Project Layout
 
 - **src/** — `lexer.py`, `parser.py`, `structure.py`, `codegen.py`, `optimizer.py`, `struct_layout.py`, `error_msgs.py`, `nasmgen.py`, `assembler.py`, `main.py`
-- **plstd/** — Standard library `.plib` files (self-contained, no headers)
-- **test/** — `.ctri` fixtures and integration checks
+- **plstd/** — Standard library `.ih` files (self-contained, no headers)
+- **test/** — `.ipp` fixtures and integration checks
 - **docs/** — Markdown documentation
 - **Makefile** — Orchestrates build, lint, and test steps
 
@@ -64,7 +64,7 @@
 
 **C11 primitives** (sizes on x86_64/Linux LP64): `int` (4B), `unsigned int` (4B), `short` (2B), `long` (8B), `char` (1B), `float` (4B), `double` (8B), `void`.
 
-**C△-specific**: `string` (first-class, auto-managed), `auto` (inferred, `%k` specifier), `dynam` (dynamic array: `.push()`, `.pop()`, `.remove()`, `len()`).
+**i++-specific**: `string` (first-class, auto-managed), `auto` (inferred, `%k` specifier), `dynam` (dynamic array: `.push()`, `.pop()`, `.remove()`, `len()`).
 
 **Not yet implemented**: `tuple`, `typed struct` inheritance, `lamb`, `autoremove`, `Robbery`.
 
@@ -86,7 +86,7 @@ struct Point(int x, int y) {
 
 **Storage**: `const`, `volatile`, `static`, `extern`, `inline`, `register`, `sizeof`
 
-**C△-specific**: `using`, `expose`, `space`, `allocate`, `free`, `asm`, `self`, `init`, `end`, `auto`, `len()`
+**i++-specific**: `using`, `expose`, `space`, `allocate`, `free`, `asm`, `self`, `init`, `end`, `auto`, `len()`
 
 **Deprecated** (SyntaxError): `restrict`, `_Bool`, `_Complex`, `_Imaginary`, `_Alignof`, `_Alignas`
 
@@ -117,7 +117,7 @@ asm int addInts(int a, int b) {
 
 ### Standard Library (plstd)
 
-Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.plib` is self-contained.
+Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.ih` is self-contained.
 
 - `printd(value)` — type-aware print
 - `printfs(format, ...)` — formatted print with `{expr}` interpolation and `%` specifiers
@@ -126,7 +126,7 @@ Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.p
 ### Compiler Pipeline
 
 ```
-.ctri → Lexer → Parser → Structurer → Simulation Pass → Code Gen → GCC + NASM → binary
+.ipp → Lexer → Parser → Structurer → Simulation Pass → Code Gen → GCC + NASM → binary
 ```
 
 ---
@@ -152,7 +152,7 @@ Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.p
 
 ### Overview
 
-This document describes how to use Apple's native `container` CLI to build and run the C△ (C Triangle) compiler on macOS systems with Apple Silicon. The `container` tool provides lightweight virtual machine virtualization specifically optimized for Apple Silicon, offering a native alternative to Docker.
+This document describes how to use Apple's native `container` CLI to build and run the i++ (i++) compiler on macOS systems with Apple Silicon. The `container` tool provides lightweight virtual machine virtualization specifically optimized for Apple Silicon, offering a native alternative to Docker.
 
 ### Prerequisites
 
@@ -168,7 +168,7 @@ container system start
 
 ### Build the Compiler with `container`
 
-The C△ project includes dedicated Makefile targets for using Apple's `container` CLI:
+The i++ project includes dedicated Makefile targets for using Apple's `container` CLI:
 
 ### Build Targets
 
@@ -189,7 +189,7 @@ This command will:
 
 1. Create a lightweight container VM optimized for Apple Silicon
 2. Install the necessary build dependencies (gcc, binutils, nasm, python)
-3. Build the PyInstaller executable from the C△ source code
+3. Build the PyInstaller executable from the i++ source code
 4. Copy the resulting binary to `dist/hypotenuse-container`
 
 ### Running Tests
@@ -206,10 +206,10 @@ This runs the same tests that `make test` runs on the host, but inside the conta
 
 #### Running a Single Test
 
-To compile and run a specific C△ test file:
+To compile and run a specific i++ test file:
 
 ```bash
-make container-run test/baseline.ctri
+make container-run test/baseline.ipp
 ```
 
 This runs the baseline test, which prints "x" to stdout.
@@ -219,7 +219,7 @@ This runs the baseline test, which prints "x" to stdout.
 You can pass additional arguments to the compiler:
 
 ```bash
-make container-run test/baseline.ctri -c -C "-Wall -O2"
+make container-run test/baseline.ipp -c -C "-Wall -O2"
 ```
 
 This compiles the baseline test with warning flags and optimization level 2.
@@ -229,12 +229,12 @@ This compiles the baseline test with warning flags and optimization level 2.
 To see the program's structure graph:
 
 ```bash
-make container-run test/baseline.ctri -p
+make container-run test/baseline.ipp -p
 ```
 
 ### Platform Configuration
 
-The C△ compiler targets `linux/amd64` architecture in the container. This is important because:
+The i++ compiler targets `linux/amd64` architecture in the container. This is important because:
 
 1. The compiler is designed to produce Linux ELF binaries
 2. The container provides the necessary Linux environment
@@ -297,7 +297,7 @@ This ensures that your host environment can have different versions or configura
 
 #### Future Directions
 
-The C△ project may add additional `container`-specific targets in the future, such as:
+The i++ project may add additional `container`-specific targets in the future, such as:
 
 - `make container-deploy` — Deploy the compiler to a containerized environment
 - `make container-dev` — Start a development container with the compiler and tools
@@ -307,7 +307,7 @@ The C△ project may add additional `container`-specific targets in the future, 
 
 - [Apple `container` CLI Documentation](https://github.com/apple/container/blob/main/docs/command-reference.md)
 - [Apple `container` GitHub Repository](https://github.com/apple/container)
-- [C△ Online Documentation](https://hypotenuse.mintlify.app)
+- [i++ Online Documentation](https://hypotenuse.mintlify.app)
 
 ---
 

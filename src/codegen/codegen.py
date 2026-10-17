@@ -1,4 +1,4 @@
-"""C11 code generator for C△ compiler."""
+"""C11 code generator for i++ compiler."""
 
 import os
 import sys
@@ -117,7 +117,7 @@ class CodeGen:
             False  # Track if global dynam inits have been inserted
         )
         self._is_plib_source = source_path and source_path.endswith(
-            ".plib"
+            ".ih"
         )  # Direct plib compilation
         self._asm_blocks = []  # Store asm blocks for later .asm file generation
         # Struct field type tracking: struct_name -> {field_name: field_type}
@@ -427,7 +427,7 @@ class CodeGen:
     # ------------------------------------------------------------------
 
     def _map_type(self, typ: str) -> str:
-        """Map C△ type to C type."""
+        """Map i++ type to C type."""
         if not typ:
             return typ
 
@@ -1337,14 +1337,14 @@ class CodeGen:
 
         # Generate plib init function for global dynam arrays (direct plib compilation)
         if self._is_plib_source and self._plib_global_inits:
-            # Extract base name from source path (e.g., /tmp/test.plib -> test)
+            # Extract base name from source path (e.g., /tmp/test.ih -> test)
             import os
 
             safe_name = ""
             if self.source_path:
                 base_name = os.path.basename(self.source_path)
-                if base_name.endswith(".plib"):
-                    safe_name = base_name[:-5]  # Remove .plib extension
+                if base_name.endswith(".ih"):
+                    safe_name = base_name[:-5]  # Remove .ih extension
                 else:
                     safe_name = base_name
                 safe_name = safe_name.replace("/", "_").replace("-", "_")
@@ -1431,7 +1431,7 @@ class CodeGen:
                 if imp.item:
                     specific_imports[imp.item] = source
                 else:
-                    basename = source.split("/")[-1].rsplit(".plib", 1)[0]
+                    basename = source.split("/")[-1].rsplit(".ih", 1)[0]
                     self._namespace_imported_libs.add(basename)
 
         # Store for use in _expr
@@ -1533,10 +1533,10 @@ class CodeGen:
             if exp_target.startswith("<") and exp_target.endswith(">"):
                 exp_target = exp.target[1:-1]
 
-            # Normalize: strip .plib extension for comparison
+            # Normalize: strip .ih extension for comparison
             exp_base = (
-                exp_target.rsplit(".plib", 1)[0]
-                if ".plib" in exp_target
+                exp_target.rsplit(".ih", 1)[0]
+                if ".ih" in exp_target
                 else exp_target
             )
 
@@ -1546,13 +1546,13 @@ class CodeGen:
                 or (imp.source == f"<{exp_target}>")
                 or (imp.source == f'"{exp_target}"')
                 or (imp.item == exp_target)
-                # Also check without .plib extension
+                # Also check without .ih extension
                 or (imp.source == exp_base)
                 or (imp.source == f"<{exp_base}>")
                 or (imp.source == f'"{exp_base}"')
                 or (
-                    imp.source.rsplit(".plib", 1)[0]
-                    if ".plib" in imp.source
+                    imp.source.rsplit(".ih", 1)[0]
+                    if ".ih" in imp.source
                     else imp.source
                 )
                 == exp_base
@@ -1813,8 +1813,8 @@ class CodeGen:
             if os.path.isabs(lib_name):
                 if os.path.exists(lib_name):
                     plib_path = lib_name
-                elif os.path.exists(f"{lib_name}.plib"):
-                    plib_path = f"{lib_name}.plib"
+                elif os.path.exists(f"{lib_name}.ih"):
+                    plib_path = f"{lib_name}.ih"
             else:
                 # Always check current directory and parent directories
                 current_dir = (
@@ -1835,31 +1835,31 @@ class CodeGen:
                     search_paths.insert(0, plib_dir)
             search_paths.extend(self._get_plibs_search_dirs())
 
-            # Handle path with folder: lib/func -> import first .plib in folder
+            # Handle path with folder: lib/func -> import first .ih in folder
             if "/" in lib_name:
                 folder, filename = lib_name.split("/", 1)
-                target_name = f"{filename}.plib"
+                target_name = f"{filename}.ih"
                 for base in search_paths:
                     candidate = os.path.join(base, folder, target_name)
                     if os.path.exists(candidate):
                         plib_path = candidate
                         break
             else:
-                # First try direct .plib file
+                # First try direct .ih file
                 for base in search_paths:
-                    candidate = os.path.join(base, f"{search_name}.plib")
+                    candidate = os.path.join(base, f"{search_name}.ih")
                     if os.path.exists(candidate):
                         plib_path = candidate
                         break
 
-                # If no .plib file found, try as folder (import all .plib files in folder)
+                # If no .ih file found, try as folder (import all .ih files in folder)
                 if not plib_path:
                     for base in search_paths:
                         folder_path = os.path.join(base, search_name)
                         if os.path.isdir(folder_path):
-                            # Import first .plib in folder
+                            # Import first .ih in folder
                             for f in sorted(os.listdir(folder_path)):
-                                if f.endswith(".plib"):
+                                if f.endswith(".ih"):
                                     plib_path = os.path.join(folder_path, f)
                                     break
                         if plib_path:
@@ -2132,8 +2132,8 @@ class CodeGen:
         if os.path.isabs(lib_name):
             if os.path.exists(lib_name):
                 plib_path = lib_name
-            elif os.path.exists(f"{lib_name}.plib"):
-                plib_path = f"{lib_name}.plib"
+            elif os.path.exists(f"{lib_name}.ih"):
+                plib_path = f"{lib_name}.ih"
         else:
             current_dir = os.path.dirname(self.source_path) if self.source_path else "."
             search_paths = [current_dir]
@@ -2148,7 +2148,7 @@ class CodeGen:
 
             if "/" in lib_name:
                 folder, filename = lib_name.split("/", 1)
-                target_name = f"{filename}.plib"
+                target_name = f"{filename}.ih"
                 for base in search_paths:
                     candidate = os.path.join(base, folder, target_name)
                     if os.path.exists(candidate):
@@ -2156,14 +2156,14 @@ class CodeGen:
                         break
             else:
                 for base in search_paths:
-                    candidate = os.path.join(base, f"{search_name}.plib")
+                    candidate = os.path.join(base, f"{search_name}.ih")
                     if os.path.exists(candidate):
                         plib_path = candidate
                         break
 
                 if not plib_path:
                     for base in search_paths:
-                        candidate = os.path.join(base, "plstd", f"{search_name}.plib")
+                        candidate = os.path.join(base, "plstd", f"{search_name}.ih")
                         if os.path.exists(candidate):
                             plib_path = candidate
                             break
@@ -2174,8 +2174,8 @@ class CodeGen:
                         folder_path = os.path.join(base, search_name)
                         if os.path.isdir(folder_path):
                             for f in sorted(os.listdir(folder_path)):
-                                if f.endswith(".plib"):
-                                    plib_name = f[:-5]  # Remove .plib extension
+                                if f.endswith(".ih"):
+                                    plib_name = f[:-5]  # Remove .ih extension
                                     full_plib_path = os.path.join(folder_path, f)
                                     full_lib_name = f"{search_name}/{plib_name}"
                                     self._collect_single_plib(
@@ -2364,10 +2364,10 @@ class CodeGen:
         if not folder_path:
             return
 
-        # Scan for all .plib files in the folder
+        # Scan for all .ih files in the folder
         for filename in sorted(os.listdir(folder_path)):
-            if filename.endswith(".plib"):
-                plib_name = filename[:-5]  # Remove .plib extension
+            if filename.endswith(".ih"):
+                plib_name = filename[:-5]  # Remove .ih extension
                 plib_path = os.path.join(folder_path, filename)
                 # Use underscores for consistent prefixing (e.g., plstd_streamer)
                 full_lib_name = f"{folder_name}_{plib_name}"
@@ -2410,8 +2410,8 @@ class CodeGen:
         if os.path.isabs(lib_name):
             if os.path.exists(lib_name):
                 plib_path = lib_name
-            elif os.path.exists(f"{lib_name}.plib"):
-                plib_path = f"{lib_name}.plib"
+            elif os.path.exists(f"{lib_name}.ih"):
+                plib_path = f"{lib_name}.ih"
         else:
             search_dirs = []
             if self.source_path:
@@ -2448,9 +2448,9 @@ class CodeGen:
                 for base in ["."] + self._get_plibs_search_dirs():
                     folder_path = os.path.join(base, folder)
                     if os.path.isdir(folder_path):
-                        # Find any .plib file in the folder
+                        # Find any .ih file in the folder
                         for f in os.listdir(folder_path):
-                            if f.endswith(".plib"):
+                            if f.endswith(".ih"):
                                 plib_path = os.path.join(folder_path, f)
                                 break
                         if plib_path:
@@ -2459,14 +2459,14 @@ class CodeGen:
             if not plib_path:
                 # Standard search
                 for d in self._get_plibs_search_dirs():
-                    candidate = os.path.join(d, f"{search_name}.plib")
+                    candidate = os.path.join(d, f"{search_name}.ih")
                     if os.path.exists(candidate):
                         plib_path = candidate
                         break
 
                 if not plib_path:
                     for d in ["."] + self._get_plibs_search_dirs():
-                        candidate = os.path.join(d, "plstd", f"{search_name}.plib")
+                        candidate = os.path.join(d, "plstd", f"{search_name}.ih")
                         if os.path.exists(candidate):
                             plib_path = candidate
                             break
@@ -2674,8 +2674,8 @@ class CodeGen:
             self._gen_dynam_helper_functions(struct_name, mapped_elem, elem_type)
 
             # Generate initialization code
-            # At global scope in .ctri: emit declaration at file scope, track initialization for main()
-            # At global scope in .plib: emit declaration at file scope, track for init function
+            # At global scope in .ipp: emit declaration at file scope, track initialization for main()
+            # At global scope in .ih: emit declaration at file scope, track for init function
             # At local scope: emit directly
             is_plib = self._generating_plib or self._is_plib_source
             if isinstance(node.initializer, InitList):

@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Compile C△ File",
+      "label": "Compile i++ File",
       "command": "${config:ctriangle.compilerPath}",
       "args": [
         "-c",
@@ -11,16 +11,16 @@
       ],
       "problemMatcher": [],
       "group": "build",
-      "detail": "Compile the current C△ file with hypotenuse"
+      "detail": "Compile the current i++ file with hypotenuse"
     },
     {
       "type": "shell",
-      "label": "Run C△ File",
+      "label": "Run i++ File",
       "command": "${fileDirname}/${fileBasenameNoExtension}",
       "args": [],
       "problemMatcher": [],
       "group": "test",
-      "dependsOn": ["Compile C△ File"],
+      "dependsOn": ["Compile i++ File"],
       "detail": "Run the compiled executable"
     },
     {
@@ -52,7 +52,7 @@
       ],
       "problemMatcher": [],
       "group": "debug",
-      "dependsOn": ["Compile C△ File"],
+      "dependsOn": ["Compile i++ File"],
       "detail": "Debug the compiled executable with GDB"
     }
   ]

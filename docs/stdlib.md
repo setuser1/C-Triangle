@@ -1,12 +1,12 @@
-# C△ Standard Library (plstd)
+# i++ Standard Library (plstd)
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-**plstd** is the C△ standard library. It is implemented in C△ itself, with `asm` blocks only where syscalls or low-level primitives are needed.
+**plstd** is the i++ standard library. It is implemented in i++ itself, with `asm` blocks only where syscalls or low-level primitives are needed.
 
-> Unlike C/C++ headers (`.h` / `.hpp`), plstd libraries are written in C△ and can use all C△ features: `dynam` arrays, `typed struct` inheritance, custom types, etc. Libraries share the same language as user code — no separate preprocessor, header syntax, or implementation file needed. A `.plib` is complete and self-contained.
+> Unlike C/C++ headers (`.h` / `.hpp`), plstd libraries are written in i++ and can use all i++ features: `dynam` arrays, `typed struct` inheritance, custom types, etc. Libraries share the same language as user code — no separate preprocessor, header syntax, or implementation file needed. A `.ih` is complete and self-contained.
 
 ---
 
@@ -60,9 +60,9 @@ printfs("{x} squared = {x*x}\n"); // 42 squared = 1764
 
 ## plstd Implementation
 
-- Written entirely in base **C△** + `asm` blocks for syscalls
-- Located in `PLIBS/` folder (e.g., `PLIBS/printd.plib`)
+- Written entirely in base **i++** + `asm` blocks for syscalls
+- Located in `PLIBS/` folder (e.g., `PLIBS/printd.ih`)
 - System path: `/usr/lib/PLIBS/`
 - User libraries: `~/.local/lib/PLIBS/`
 
-> The `PLIBS/` directory holds all `.plib` library files. User libraries go in `~/.local/lib/PLIBS/`, system libraries in `/usr/lib/PLIBS/`.
+> The `PLIBS/` directory holds all `.ih` library files. User libraries go in `~/.local/lib/PLIBS/`, system libraries in `/usr/lib/PLIBS/`.

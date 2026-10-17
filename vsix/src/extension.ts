@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 
-// Keywords recognized by the C△ compiler
+// Keywords recognized by the i++ compiler
 const KEYWORDS = [
     // Control flow
     'if', 'else', 'while', 'for', 'do', 'switch', 'case', 'default', 'break', 'continue', 'return', 'goto',
     // Primitive types
     'int', 'char', 'void', 'float', 'double', 'short', 'long', 'signed', 'unsigned',
-    // C△ types
+    // i++ types
     'dynam', 'string', 'struct', 'union', 'enum', 'typedef', 'auto', 'size_t',
     // Storage modifiers
     'const', 'volatile', 'static', 'extern', 'inline', 'register',
@@ -40,7 +40,7 @@ const KEYWORD_DOCS: Record<string, string> = {
     'long': 'Long integer',
     'signed': 'Signed modifier',
     'unsigned': 'Unsigned modifier',
-    // C△ types
+    // i++ types
     'dynam': 'Dynamic array\n\n`dynam int arr = [1, 2, 3]`\nMethods: `.push()`, `.pop()`, `.len()`',
     'string': 'First-class string\nSupports `+` concatenation and `{expr}` f-strings',
     'struct': 'Structure type\n\n`struct Point { int x; int y; }`',

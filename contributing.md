@@ -1,7 +1,7 @@
-# 🤝 Contributing to C△ and The Hypotenuse Compiler
+# 🤝 Contributing to i++ and The Hypotenuse Compiler
 
 <p align="center">
-  <img src="assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
 Thank you for your interest in contributing! 🎉 Whether you're fixing bugs, adding features, improving docs, or adding error personality messages — all contributions are welcome.

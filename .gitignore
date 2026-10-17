@@ -10,7 +10,7 @@
 .opencode/
 .DS_Store
 
-.ctri
+.ipp
 *.spec
 *.s
 

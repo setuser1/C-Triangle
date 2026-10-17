@@ -55,10 +55,10 @@ Tokens = [
     ("UNDERSCORE_ALIGNAS", re.compile(r"\b_Alignas\b")),
     ("UNDERSCORE_COMPLEX", re.compile(r"\b_Complex\b")),
     ("UNDERSCORE_IMAGINARY", re.compile(r"\b_Imaginary\b")),
-    # C△ MEMORY KEYWORDS
+    # i++ MEMORY KEYWORDS
     ("ALLOCATE", re.compile(r"\ballocate\b")),
     ("FREE", re.compile(r"\bfree\b")),
-    # C△ IMPORT KEYWORDS
+    # i++ IMPORT KEYWORDS
     ("USING", re.compile(r"\busing\b")),
     ("FROM", re.compile(r"\bfrom\b")),
     ("EXPOSE", re.compile(r"\bexpose\b")),

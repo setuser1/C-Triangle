@@ -1,10 +1,10 @@
-# C△ Syntax Guide
+# i++ Syntax Guide
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-A complete reference for C△ syntax with examples. C△ inherits C11 syntax and extends it with new constructs.
+A complete reference for i++ syntax with examples. i++ inherits C11 syntax and extends it with new constructs.
 
 ---
 
@@ -12,12 +12,12 @@ A complete reference for C△ syntax with examples. C△ inherits C11 syntax and
 
 | Extension | Purpose         |
 | --------- | --------------- |
-| `.ctri`   | C△ source file  |
-| `.plib`   | C△ library file |
+| `.ipp`   | i++ source file  |
+| `.ih`   | i++ library file |
 
-The compiler detects whether a file is an **executable** (has a `main` function) or a **library** (`.plib` extension).
+The compiler detects whether a file is an **executable** (has a `main` function) or a **library** (`.ih` extension).
 
-> Library files (`.plib`) are written in C△ using the same features as regular code: `dynam` arrays, `typed struct` inheritance, custom types, etc. Unlike C/C++ headers, there's no separate header syntax, preprocessor, or implementation file — a `.plib` file is complete and self-contained.
+> Library files (`.ih`) are written in i++ using the same features as regular code: `dynam` arrays, `typed struct` inheritance, custom types, etc. Unlike C/C++ headers, there's no separate header syntax, preprocessor, or implementation file — a `.ih` file is complete and self-contained.
 
 ---
 
@@ -79,7 +79,7 @@ int x = 5;
 float pi = 3.14;
 char c = 'A';
 
-// C△ string type *NEW*
+// i++ string type *NEW*
 string name = "Hypotenuse";
 
 // Dynamic / inferred type *NEW*

@@ -14,7 +14,7 @@ def parse_args():
     """Parse command-line arguments using argparse."""
     parser = argparse.ArgumentParser(
         prog="hypotenuse",
-        description="C triangle compiler.",
+        description="i++ compiler.",
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
@@ -79,7 +79,7 @@ def parse_args():
         "-r",
         "--remove",
         metavar="NAME",
-        help="Remove a .plib file from PLIBS folder by name",
+        help="Remove a .ih file from PLIBS folder by name",
     )
 
     return parser.parse_args()
@@ -435,8 +435,8 @@ def install_to_plibs(source_path):
         return
 
     filename = os.path.basename(source_path)
-    if not filename.endswith(".plib"):
-        print(f"Error: only .plib files can be installed, got '{filename}'")
+    if not filename.endswith(".ih"):
+        print(f"Error: only .ih files can be installed, got '{filename}'")
         return
 
     # Try system location first, then user location
@@ -467,11 +467,11 @@ def install_to_plibs(source_path):
 
 
 def remove_from_plibs(name):
-    """Remove a .plib file from PLIBS folder by name."""
+    """Remove a .ih file from PLIBS folder by name."""
     import os
 
-    if not name.endswith(".plib"):
-        name = name + ".plib"
+    if not name.endswith(".ih"):
+        name = name + ".ih"
 
     # Try both locations
     system_plibs = "/usr/lib/PLIBS"
@@ -509,8 +509,8 @@ def main():
 
     had_errors = False
     for path in args.files:
-        if not path.endswith((".ctri", ".plib")):
-            print(f"Error: Only .ctri/.plib files are supported, got '{path}'")
+        if not path.endswith((".ipp", ".ih")):
+            print(f"Error: Only .ipp/.ih files are supported, got '{path}'")
             continue
         try:
             tokens, output, objects, asm_blocks = compile_file(path, args.target)
@@ -561,11 +561,11 @@ def main():
                 write_output(c_path, output)
             else:
                 print(output)
-                # Handle both .ctri and .plib file extensions
-                if path.endswith(".ctri"):
-                    c_path = path.replace(".ctri", ".c")
-                elif path.endswith(".plib"):
-                    c_path = path.replace(".plib", ".c")
+                # Handle both .ipp and .ih file extensions
+                if path.endswith(".ipp"):
+                    c_path = path.replace(".ipp", ".c")
+                elif path.endswith(".ih"):
+                    c_path = path.replace(".ih", ".c")
                 else:
                     # Fallback - should not happen due to earlier check
                     c_path = path + ".c"

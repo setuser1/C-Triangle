@@ -1,10 +1,10 @@
-# C△ Inline Assembly
+# i++ Inline Assembly
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-C△ supports **inline assembly blocks** via the `asm` keyword. Each `asm` block is compiled to a separate `.asm` file, assembled with NASM, and linked into the final binary.
+i++ supports **inline assembly blocks** via the `asm` keyword. Each `asm` block is compiled to a separate `.asm` file, assembled with NASM, and linked into the final binary.
 
 ---
 
@@ -19,7 +19,7 @@ asm functionName(params) {
 ```
 
 - The **function name** is the label.
-- **Parameters** use native C△ type declarations instead of assembler directives.
+- **Parameters** use native i++ type declarations instead of assembler directives.
 - syntax describes what syntax is being used
 - Every `asm` block must explicitly declare its text section for the selected syntax.
   Use `section .text` for x86_64 NASM targets
@@ -77,8 +77,8 @@ asm void exitProcess(int code) {
 
 - `asm` blocks are **opaque** to the simulation pass — no last-use analysis inside them
 - The function name becomes the **global label** in the `.asm` file
-- Do not use assembler data directives (`db`, `dw`, etc.) — use C△ declarations instead
-- Text section directives are mandatory; data storage can still be represented with C△ variable declarations
+- Do not use assembler data directives (`db`, `dw`, etc.) — use i++ declarations instead
+- Text section directives are mandatory; data storage can still be represented with i++ variable declarations
 - Use `return;` instead of `ret`, or `return expr;` for simple integer and floating-point return values
 - Variables declared in bare `asm { }` blocks are registered in the surrounding scope; variables declared in `asm` functions are registered for import access and in the function scope
 - `asm` functions are assembled with NASM and linked by GCC
@@ -90,7 +90,7 @@ asm void exitProcess(int code) {
 The compiler pipeline handles everything automatically:
 
 ```
-.ctri source
+.ipp source
   └──▶ code gen  ──▶  .c file  ──▶  GCC
   └──▶ asm blocks ──▶  .asm files  ──▶  NASM  ──▶  GCC linker  ──▶  binary
 ```

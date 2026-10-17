@@ -1,4 +1,4 @@
-"""Assembly and linking for C triangle compiler."""
+"""Assembly and linking for i++ compiler."""
 
 
 

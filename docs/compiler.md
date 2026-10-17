@@ -1,17 +1,17 @@
 # The Hypotenuse Compiler
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-The Hypotenuse Compiler transforms C△ source files into native Linux ELF x86_64 binaries through a multi-stage pipeline.
+The Hypotenuse Compiler transforms i++ source files into native Linux ELF x86_64 binaries through a multi-stage pipeline.
 
 ---
 
 ## Compiler Pipeline
 
 ```
-.ctri source
+.ipp source
      │
      ▼
   1 Lexer          (lexer.py)       ──▶  token stream
@@ -39,7 +39,7 @@ The Hypotenuse Compiler transforms C△ source files into native Linux ELF x86_6
 
 ### 1. Lexer (`lexer.py`)
 
-Tokenizes the source file into a flat `(type, value)` token stream. Handles comments, preprocessor directives, all C△ keywords, operators, and literals.
+Tokenizes the source file into a flat `(type, value)` token stream. Handles comments, preprocessor directives, all i++ keywords, operators, and literals.
 
 ### 2. Parser (`parser.py`)
 
@@ -92,25 +92,25 @@ python3 src/main.py [options] <file>
 | `-c` / `--compile` | Compile with gcc to executable               |
 | `-C` / `--cflags` | Pass extra flags to gcc                       |
 | `-i` / `--install` | Install file to PLIBS folder                 |
-| `-r` / `--remove` | Remove a .plib file from PLIBS folder        |
+| `-r` / `--remove` | Remove a .ih file from PLIBS folder        |
 
 ### Example
 
 ```bash
 # Compile a file
-python3 src/main.py hello.ctri
+python3 src/main.py hello.ipp
 
 # Debug tokens and scope graph
-python3 src/main.py -t hello.ctri
+python3 src/main.py -t hello.ipp
 
 # Print structure graph
-python3 src/main.py -p hello.ctri
+python3 src/main.py -p hello.ipp
 
 # Compile with gcc and extra flags
-python3 src/main.py -c -C "$(sdl2-config --cflags --libs)" graphics.ctri
+python3 src/main.py -c -C "$(sdl2-config --cflags --libs)" graphics.ipp
 
 # Install a library
-python3 src/main.py -i mylib.plib
+python3 src/main.py -i mylib.ih
 ```
 
 ---

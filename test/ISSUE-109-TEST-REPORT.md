@@ -4,13 +4,13 @@
 
 ## Overview
 
-Tested whether the C△ compiler correctly implements tree-shaking (selective code inclusion) for library imports. The issue claims that the compiler imports ALL functions from a library, even when only a subset is used.
+Tested whether the i++ compiler correctly implements tree-shaking (selective code inclusion) for library imports. The issue claims that the compiler imports ALL functions from a library, even when only a subset is used.
 
 ## Test Files Created
 
-1. **`test/issue-109-selective-import.ctri`** - Selective import of printd
-2. **`test/issue-109-multi-unused.ctri`** - Selective import of multiple functions
-3. **`test/issue-109-import-all.ctri`** - Import entire library
+1. **`test/issue-109-selective-import.ipp`** - Selective import of printd
+2. **`test/issue-109-multi-unused.ipp`** - Selective import of multiple functions
+3. **`test/issue-109-import-all.ipp`** - Import entire library
 
 ## Key Finding: Selective Import Bug
 
@@ -50,13 +50,13 @@ The bug exists in the codegen's tree-shaking logic for selective imports of top-
 The bug only manifests for **top-level functions** in libraries:
 
 #### ✓ Works: Functions in Namespaces (spaces)
-- `printd.plib` defines functions inside `space printd { }`
+- `printd.ih` defines functions inside `space printd { }`
 - Selective import of printd collects the entire space
 - Tree-shaking includes all dependencies correctly
 - **Compilation succeeds**
 
 #### ✗ Broken: Top-level Functions
-- `string.plib` defines strlen as a top-level function
+- `string.ih` defines strlen as a top-level function
 - Selective import tries to mark strlen as "used"
 - Tree-shaking logic fails to identify the library-prefixed name
 - Function definition is skipped

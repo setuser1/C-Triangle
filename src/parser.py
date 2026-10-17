@@ -90,7 +90,7 @@ class AsmBlock(Node):
     name: Optional[str]  # Function name or None for bare asm
     params: List[Tuple[str, str]]  # (type, name) parameter list
     lines: List[str]  # Raw assembly lines (excluding data)
-    return_expr: Optional[str] = None  # Optional C△ return expression
+    return_expr: Optional[str] = None  # Optional i++ return expression
     syntax: Optional[str] = None  # e.g., "x86_64_linux"
     is_function: bool = True  # True for asm int func(), False for bare asm { }
     variables: List[Dict] = field(default_factory=list)
@@ -1152,7 +1152,7 @@ class Parser:
         t = self.peek()
         if t[0] == "LT":
             self.expect("LT")
-            # Handle identifiers and keyword-like library filenames such as string.plib.
+            # Handle identifiers and keyword-like library filenames such as string.ih.
             if self.peek()[0] in _TYPE_TOKENS:
                 lib_name = self.advance()[1]
             else:
@@ -1269,7 +1269,7 @@ class Parser:
             if self.peek()[0] == "EOF":
                 raise SyntaxError("Unclosed asm block - missing '}'")
 
-            # Skip standalone semicolons (C△ statement terminators or comments)
+            # Skip standalone semicolons (i++ statement terminators or comments)
             if self.peek()[0] == "SEMICOLON":
                 semicolon_line = self.peek()[2] if len(self.peek()) > 2 else 0
                 self.advance()
@@ -1289,7 +1289,7 @@ class Parser:
                     syntax = self.advance()[1]
                 continue
 
-            # Check for C△ variable declarations. ASM blocks allow declarations
+            # Check for i++ variable declarations. ASM blocks allow declarations
             # anywhere; they are emitted into the generated data section.
             if self.peek()[0] in (
                 "STRING",
@@ -1343,7 +1343,7 @@ class Parser:
                         self.advance()
                 continue  # don't add return to lines
 
-            # Check for C△ function call (call func(args))
+            # Check for i++ function call (call func(args))
             if self.peek()[0] == "IDENTIFIER" and self.peek()[1] == "call":
                 call_lines = self._read_ctri_call()
                 lines.extend(call_lines)
@@ -1478,7 +1478,7 @@ class Parser:
         return "".join(parts).strip()
 
     def _read_ctri_declaration(self) -> Optional[Dict]:
-        """Parse a C△ variable declaration and return info dict."""
+        """Parse a i++ variable declaration and return info dict."""
         tok = self.peek()
         var_type = tok[1]
         self.advance()
@@ -1576,7 +1576,7 @@ class Parser:
         return None
 
     def _read_ctri_call(self) -> List[str]:
-        """Parse a C△ function call and return list of assembly lines."""
+        """Parse a i++ function call and return list of assembly lines."""
         self.expect("IDENTIFIER")  # consume 'call'
         func_name = self.advance()[1]
         self.expect("LPAREN")

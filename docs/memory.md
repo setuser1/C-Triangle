@@ -1,10 +1,10 @@
-# C△ Memory Model
+# i++ Memory Model
 
 <p align="center">
-  <img src="../assets/logo.png" alt="C△ Logo" width="120"/>
+  <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-C△ gives you full control over memory while adding safer, more expressive tools on top of raw C heap management.
+i++ gives you full control over memory while adding safer, more expressive tools on top of raw C heap management.
 
 ---
 
