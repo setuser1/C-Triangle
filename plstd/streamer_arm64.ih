@@ -1,0 +1,52 @@
+space streams_impl_arm64 {
+    asm int sys_read(int fd, string buf, int count) {
+        syntax arm64_linux
+        section .text
+        ldr x0, fd
+        ldr x1, buf
+        ldr x2, count
+        mov x8, #63
+        svc #0
+        ret
+    }
+
+    asm int sys_write(int fd, string buf, int count) {
+        syntax arm64_linux
+        section .text
+        ldr x0, fd
+        ldr x1, buf
+        ldr x2, count
+        mov x8, #64
+        svc #0
+        ret
+    }
+
+    asm int sys_open(string path, int flags, int mode) {
+        syntax arm64_linux
+        section .text
+        ldr x0, path
+        ldr x1, flags
+        ldr x2, mode
+        mov x8, #56
+        svc #0
+        ret
+    }
+
+    asm int sys_close(int fd) {
+        syntax arm64_linux
+        section .text
+        ldr x0, fd
+        mov x8, #57
+        svc #0
+        ret
+    }
+
+    asm int sys_unlink(string path) {
+        syntax arm64_linux
+        section .text
+        ldr x0, path
+        mov x8, #35
+        svc #0
+        ret
+    }
+}
