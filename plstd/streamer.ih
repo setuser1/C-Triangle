@@ -1,0 +1,125 @@
+using "streamer_x86"
+using "streamer_arm64"
+
+#include <stddef.h>
+
+space streams {
+#ifdef __x86_64__
+    int sys_read(int fd, string buf, int count) {
+        return sys_read@streams_impl_x86(fd, buf, count);
+    }
+
+    int sys_write(int fd, string buf, int count) {
+        return sys_write@streams_impl_x86(fd, buf, count);
+    }
+
+    int sys_open(string path, int flags, int mode) {
+        return sys_open@streams_impl_x86(path, flags, mode);
+    }
+
+    int sys_close(int fd) {
+        return sys_close@streams_impl_x86(fd);
+    }
+
+    int sys_unlink(string path) {
+        return sys_unlink@streams_impl_x86(path);
+    }
+#elif defined(__aarch64__) || defined(__ARM64__)
+    int sys_read(int fd, string buf, int count) {
+        return sys_read@streams_impl_arm64(fd, buf, count);
+    }
+
+    int sys_write(int fd, string buf, int count) {
+        return sys_write@streams_impl_arm64(fd, buf, count);
+    }
+
+    int sys_open(string path, int flags, int mode) {
+        return sys_open@streams_impl_arm64(path, flags, mode);
+    }
+
+    int sys_close(int fd) {
+        return sys_close@streams_impl_arm64(fd);
+    }
+
+    int sys_unlink(string path) {
+        return sys_unlink@streams_impl_arm64(path);
+    }
+#endif
+
+    string read_file(int fd) {
+        dynam char buffer = [];
+        char tmp[256];
+        int n;
+        while ((n = sys_read(fd, tmp, 256)) > 0) {
+            int i = 0;
+            while (i < n) { buffer.push(tmp[i]); i = i + 1; }
+        }
+        if (n < 0) { return NULL; }
+        buffer.push('\0');
+        return buffer;
+    }
+
+    int open_file(string path) {
+        return sys_open(path, 0, 0);
+    }
+
+    string write_file(string s, int fd) {
+        if (s) { sys_write(fd, s, len(s)); }
+        return s;
+    }
+
+    void close_file(int fd) {
+        sys_close(fd);
+    }
+
+    int exists(string path) {
+        int fd = open_file(path);
+        if (fd < 0) { return 0; }
+        close_file(fd);
+        return 1;
+    }
+
+    string remove_file(string path) {
+        if (exists(path)) {
+            sys_unlink(path);
+            return path;
+        }
+        return NULL;
+    }
+}
+
+string outstream(string buffer, string path) {
+    int fd = open_file@streams(path);
+    if (fd < 0 || !exists@streams(path)) { return NULL; }
+    string result = write_file@streams(buffer, fd);
+    close_file@streams(fd);
+    return result;
+}
+
+string instream(string path) {
+    int fd = open_file@streams(path);
+    if (fd < 0 || !exists@streams(path)) {
+        return "stderr: failed to read file";
+        exit(1);
+    }
+    string result = read_file@streams(fd);
+    close_file@streams(fd);
+    return result;
+}
+
+int sizeget(string path) {
+    string stream = instream(path);
+    if (!stream) { return -1; }
+    return len(stream);
+}
+
+string steal(string path, string out_path) {
+    string stream = instream(path);
+    if (!stream) { return NULL; }
+    if (!outstream(stream, out_path)) { return NULL; }
+    return stream;
+}
+
+void remove(string path) {
+    remove_file@streams(path);
+}
