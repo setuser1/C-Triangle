@@ -98,7 +98,7 @@ class CodeGen:
         self._alias_to_lib = {}  # Maps alias (e.g., "lib") -> actual lib name (e.g., "mylib")
         self._top_level_lib_functions = {}  # Maps lib_name -> set of top-level function names
         self._exposed_funcs = {}  # Maps bare_name -> lib_name for exposed functions
-        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["plstd/streamer", "plstd/other"])
+        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["iodine/streamer", "iodine/other"])
         self._namespace_imported_libs = set()  # Track libs imported as full namespaces
         self._standard_libs = set()  # Plib filenames loaded from the standard library folder
         self._used_functions = set()  # Track used function names for tree-shaking

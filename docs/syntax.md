@@ -12,7 +12,7 @@ A complete reference for i++ syntax with examples. i++ inherits C11 syntax and e
 
 | Extension | Purpose         |
 | --------- | --------------- |
-| `.ipp`   | i++ source file  |
+| `.ix`   | i++ source file  |
 | `.ih`   | i++ library file |
 
 The compiler detects whether a file is an **executable** (has a `main` function) or a **library** (`.ih` extension).
@@ -23,7 +23,7 @@ The compiler detects whether a file is an **executable** (has a `main` function)
 
 ## Base Functions
 
-These functions are built into the language itself, not part of plstd.
+These functions are built into the language itself, not part of iodine.
 
 ### `len(collection)` — Length
 
@@ -46,10 +46,10 @@ int t_len = len(t);    // t_len = 3
 
 ```c
 // Import a standard library file by filename
-using <printd>
+using <iodine/printd>
 
 // Import specific function from a system library
-using printd from <printd>
+using printd from <iodine/printd>
 
 // Import from a local library
 using helper from "utils"

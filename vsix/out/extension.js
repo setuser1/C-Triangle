@@ -81,11 +81,11 @@ const KEYWORD_DOCS = {
     'inline': 'Inline function hint',
     'register': 'Register storage hint',
     // Imports
-    'using': 'Import\n\n`using "module"`, `using x from <plstd>`',
-    'from': 'Import source\n\n`using printd from <plstd>`',
-    'expose': 'Globalize symbols\n\n`expose plstd`',
+    'using': 'Import\n\n`using "module"`, `using x from <iodine/printd>`',
+    'from': 'Import source\n\n`using printd from <iodine/printd>`',
+    'expose': 'Globalize symbols\n\n`expose iodine`',
     'space': 'Namespace block\n\n`space myname { }`\nAccess via `@`: `func@myname`',
-    'as': 'Alias at import\n\n`using printd as pd from <plstd>`',
+    'as': 'Alias at import\n\n`using printd as pd from <iodine/printd>`',
     // Other
     'sizeof': 'Size of expression or type',
 };

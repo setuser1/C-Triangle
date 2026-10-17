@@ -90,7 +90,7 @@ asm void exitProcess(int code) {
 The compiler pipeline handles everything automatically:
 
 ```
-.ipp source
+.ix source
   └──▶ code gen  ──▶  .c file  ──▶  GCC
   └──▶ asm blocks ──▶  .asm files  ──▶  NASM  ──▶  GCC linker  ──▶  binary
 ```

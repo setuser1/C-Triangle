@@ -63,7 +63,7 @@ Tests live in the `test/` directory. Add a test for any bug you fix or feature y
 ├── 📂 docs/         ← language and compiler documentation
 ├── 📂 test/         ← test files
 ├── 📂 vsix/         ← vscode extension folder
-├── 📂 plstd/        ← plus standard library
+├── 📂 iodine/        ← plus standard library
 ├── 📂 assets/       ← logo and media
 ├── 📄 makefile      ← build and test targets
 └── 📄 README.MD     ← project overview

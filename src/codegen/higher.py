@@ -62,7 +62,7 @@ class front:
         self._scoped_var_imports = {}  # imported name -> (owner, symbol, generated name)
         self._current_alias = {}  # lib_name -> alias
         self._alias_to_lib = {}  # Maps alias (e.g., "lib") -> actual lib name (e.g., "mylib")
-        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["plstd/streamer", "plstd/other"])
+        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["iodine/streamer", "iodine/other"])
         self._namespace_imported_libs = set()  # Track libs imported as full namespaces
         self._standard_libs = set()  # Plib filenames loaded from the standard library folder
 

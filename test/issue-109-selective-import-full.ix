@@ -1,0 +1,9 @@
+using <iodine/string>;
+using <iodine/printd>;
+
+int main() {
+    string s = "hello";
+    int length = strlen@lib(s);
+    printd@lib(length);
+    return 0;
+}

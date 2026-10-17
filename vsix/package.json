@@ -23,7 +23,7 @@
       {
         "id": "ctriangle",
         "aliases": ["i++"],
-        "extensions": [".ipp", ".ih"],
+        "extensions": [".ix", ".ih"],
         "configuration": "./language-configuration.json"
       }
     ],

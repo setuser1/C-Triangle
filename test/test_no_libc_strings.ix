@@ -1,0 +1,11 @@
+string base = "hello";
+
+int main() {
+    string a = "foo";
+    string b = "bar";
+    int n = len(a);
+    string c = a + b;
+    a = "newvalue";
+    a = a + "more";
+    return n;
+}

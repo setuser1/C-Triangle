@@ -10,17 +10,16 @@
 
 | Action                      | Command                                          | Description                                                   |
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------------------- |
-| Install dependencies        | `make install`                                   | Installs `pytest`, `pyflakes`.                                |
-| Run baseline (generates C)  | `make run`                                       | Compiles `test/baseline.ipp`, prints generated C to stdout.  |
-| Compile with GCC            | `python3 src/main.py -c -C "FLAGS" file.ipp`   | Compile `.ipp` to executable. Use `-C` for extra cflags.     |
-| Print tokens (debug)        | `python3 src/main.py -t test/<file>.ipp`        | Lexes the file and prints the token stream.                   |
-| Print structure graph       | `python3 src/main.py -p test/<file>.ipp`        | Prints the Callee/Caller/Scope graph.                         |
-| Show generated assembly     | `python3 src/main.py -a test/<file>.ipp`        | Shows `.asm` output for `asm` blocks.                         |
+| Install dependencies        | `make install`                                   | Installs `pyflakes`, `pyinstaller`.                           |
+| Run baseline (generates C)  | `make run`                                       | Compiles `test/baseline.ix`, prints generated C to stdout.  |
+| Compile with GCC            | `python3 src/main.py -c -C "FLAGS" file.ix`   | Compile `.ix` to executable. Use `-C` for extra cflags.     |
+| Print tokens (debug)        | `python3 src/main.py -t test/<file>.ix`        | Lexes the file and prints the token stream.                   |
+| Print structure graph       | `python3 src/main.py -p test/<file>.ix`        | Prints the Callee/Caller/Scope graph.                         |
+| Show generated assembly     | `python3 src/main.py -a test/<file>.ix`        | Shows `.asm` output for `asm` blocks.                         |
 | Lint                        | `make lint`                                      | Runs **pyflakes** against `src/*.py`.                         |
-| Type-check / regression     | `make typecheck`                                 | Executes the compiler on every `.ipp` test file.             |
-| Full test suite             | `make test`                                      | Lint → type-check → regression checks.                        |
-| Run a single test           | `python3 src/main.py test/<file>.ipp`           | Compile one `.ipp` fixture directly.                         |
-| Clean CI build              | `make all`                                       | `install → lint → test`; used by GitHub CI.                   |
+| Local compiler suite        | `make test`                                      | Compiles eleven focused cases; not run by GitHub Actions.     |
+| Compile an example          | `python3 src/main.py test/<file>.ix`           | Compile one of the small `.ix` examples.                     |
+| Clean build                 | `make all`                                       | `install → lint → build`.                                    |
 | Build binary                | `make build`                                     | Build PyInstaller executable (`dist/hypotenuse`).             |
 | Install binary              | `make full-install`                              | Install to `/usr/local/bin` or `~/.local/bin`.                |
 
@@ -33,7 +32,6 @@
 - **Naming**: `snake_case` for modules/functions/variables. `PascalCase` for classes. `UPPER_SNAKE_CASE` for constants. `_prefix` for private helpers.
 - **Type hints**: PEP 484 style, minimal. Avoid `Any`.
 - **Error handling**: Specific exception catches (no bare `except`). Error messages from `src/error_msgs.py`.
-- **Testing**: Idempotent, no mutable global state. Assert on stable substrings.
 - **Lint**: Run `make lint` (pyflakes) before committing.
 
 ---
@@ -41,16 +39,16 @@
 ## Project Layout
 
 - **src/** — `lexer.py`, `parser.py`, `structure.py`, `codegen.py`, `optimizer.py`, `struct_layout.py`, `error_msgs.py`, `nasmgen.py`, `assembler.py`, `main.py`
-- **plstd/** — Standard library `.ih` files (self-contained, no headers)
-- **test/** — `.ipp` fixtures and integration checks
+- **iodine/** — Standard library `.ih` files (self-contained, no headers)
+- **test/** — eleven `.ix` examples and a local `.ih` import library
 - **docs/** — Markdown documentation
-- **Makefile** — Orchestrates build, lint, and test steps
+- **Makefile** — Orchestrates build and lint steps
 
 ---
 
 ## CI / GitHub Actions
 
-- **`makefile.yml`** — Runs `make all` on every push/PR (install, lint, full test suite)
+- **`makefile.yml`** — Runs install, lint, and build on every push/PR
 - **`summary.yml`** — Aggregates job results, posts a PR comment
 - **`label.yml`** — Auto-adds labels based on `labeler.yml`
 
@@ -115,9 +113,9 @@ asm int addInts(int a, int b) {
 - `asm` blocks are opaque to the simulation pass
 - Text section mandatory: `section .text` (x86), `.section __TEXT,__text` (ARM64)
 
-### Standard Library (plstd)
+### Standard Library (iodine)
 
-Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.ih` is self-contained.
+Standard library files are located in `/usr/lib/PLIBS/iodine/` (system) and `~/.local/lib/PLIBS/iodine/` (user). Each `.ih` is self-contained.
 
 - `printd(value)` — type-aware print
 - `printfs(format, ...)` — formatted print with `{expr}` interpolation and `%` specifiers
@@ -126,7 +124,7 @@ Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.i
 ### Compiler Pipeline
 
 ```
-.ipp → Lexer → Parser → Structurer → Simulation Pass → Code Gen → GCC + NASM → binary
+.ix → Lexer → Parser → Structurer → Simulation Pass → Code Gen → GCC + NASM → binary
 ```
 
 ---
@@ -134,13 +132,13 @@ Located at `/usr/lib/PLIBS/` (system) and `~/.local/lib/PLIBS/` (user). Each `.i
 ## AI Agent Guidelines
 
 - **Never edit without reading first.** Use `read`, `glob`, `grep`, `edit`, `write`, `bash`, `todo` tools.
-- **Commit only when asked.** Run `make lint` and `make test` before committing.
+- **Commit only when asked.** Run `make lint` and `make build` before committing.
 - **No destructive git actions** without explicit authorization (`git reset --hard`, force-push, etc.).
 - **Parallelize** independent reads/searches using multi-tool calls.
 - **Clarify** underspecified requests before proceeding.
 - **Todo lists** for 3+ step tasks. One `in_progress` at a time.
 - **Respect the style guide.** Follow naming, imports, formatting, and error-handling conventions.
-- **Run lint & tests after changes.** Catch regressions early.
+- **Run lint and build checks after changes.** Catch regressions early.
 - **Report before fixing.** Enumerate bugs/risks with file:line references first. Fix only after approval.
 - **Don't touch unrelated files.** Never delete code unless explicitly requested.
 - **Update docs.** If you change functionality, update `docs/*.md` and/or the Mintlify docs.
@@ -174,7 +172,6 @@ The i++ project includes dedicated Makefile targets for using Apple's `container
 
 - `make container-build` — Builds the compiler using the native `container` CLI
 - `make container-run` — Runs a compilation command inside the container
-- `make container-test` — Runs the full test suite inside the container
 - `make container-lint` — Runs linting checks inside the container
 
 ### Building the Compiler
@@ -192,24 +189,22 @@ This command will:
 3. Build the PyInstaller executable from the i++ source code
 4. Copy the resulting binary to `dist/hypotenuse-container`
 
-### Running Tests
+### Compiling Examples
 
-To run the compiler and test suite inside the container:
+Compile an example inside the container:
 
 ```bash
-make container-test
+make container-run test/baseline.ix
 ```
-
-This runs the same tests that `make test` runs on the host, but inside the container environment.
 
 ### Usage Examples
 
-#### Running a Single Test
+#### Running an Example
 
 To compile and run a specific i++ test file:
 
 ```bash
-make container-run test/baseline.ipp
+make container-run test/baseline.ix
 ```
 
 This runs the baseline test, which prints "x" to stdout.
@@ -219,7 +214,7 @@ This runs the baseline test, which prints "x" to stdout.
 You can pass additional arguments to the compiler:
 
 ```bash
-make container-run test/baseline.ipp -c -C "-Wall -O2"
+make container-run test/baseline.ix -c -C "-Wall -O2"
 ```
 
 This compiles the baseline test with warning flags and optimization level 2.
@@ -229,7 +224,7 @@ This compiles the baseline test with warning flags and optimization level 2.
 To see the program's structure graph:
 
 ```bash
-make container-run test/baseline.ipp -p
+make container-run test/baseline.ix -p
 ```
 
 ### Platform Configuration
@@ -287,13 +282,7 @@ Then inside the container, run the build commands manually.
 
 ### Integration with Host Environment
 
-The containerized compiler maintains separation from your host development environment. For collaborative development, you can:
-
-1. Use the standard `make test` on your local machine for development
-2. Use `make container-test` for final validation
-3. Use `make container-build` for production builds
-
-This ensures that your host environment can have different versions or configurations of tools while the container provides a consistent build environment.
+The containerized compiler maintains separation from your host development environment. Use `make lint` and `make build` on the host, or `make container-build` for a containerized build.
 
 #### Future Directions
 

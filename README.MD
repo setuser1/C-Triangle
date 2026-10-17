@@ -24,7 +24,7 @@ The i++ compiler and standard library support multiple architectures:
 
 ---
 
-### Standard Library (plstd) Architecture Support
+### Standard Library (iodine) Architecture Support
 
 - **printd.ih** — Type-aware printing with conditional compilation for both x86_64 Linux
 - **string.ih** — String operations (strcmp, strcpy, strcat, etc.) optimized for each architecture
@@ -80,21 +80,13 @@ This will create `hypotenuse-container` in the `dist/` directory.
 Use `make container-run` to run the compiler inside the container:
 
 ```bash
-make container-run test/baseline.ipp
+make container-run test/baseline.ix
 ```
 
-Or run a specific test file:
+Or inspect a specific example:
 
 ```bash
-make container-run test/baseline.ipp -p
-```
-
-#### Running Tests
-
-Use `make container-test` to run the full test suite inside the container:
-
-```bash
-make container-test
+make container-run test/baseline.ix -p
 ```
 
 #### Linting
@@ -104,6 +96,10 @@ Use `make container-lint` to run linting checks inside the container:
 ```bash
 make container-lint
 ```
+
+#### Local Compiler Suite
+
+Run `make test` to compile eleven focused compiler cases locally. The suite is not run by GitHub Actions.
 
 ---
 

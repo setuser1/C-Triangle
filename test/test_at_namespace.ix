@@ -1,0 +1,6 @@
+using printd from <iodine/printd>
+
+int main() {
+    printd@lib("Testing @ namespace syntax\n");
+    return 0;
+}

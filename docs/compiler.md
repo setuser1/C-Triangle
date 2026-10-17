@@ -11,7 +11,7 @@ The Hypotenuse Compiler transforms i++ source files into native Linux ELF x86_64
 ## Compiler Pipeline
 
 ```
-.ipp source
+.ix source
      │
      ▼
   1 Lexer          (lexer.py)       ──▶  token stream
@@ -98,16 +98,16 @@ python3 src/main.py [options] <file>
 
 ```bash
 # Compile a file
-python3 src/main.py hello.ipp
+python3 src/main.py hello.ix
 
 # Debug tokens and scope graph
-python3 src/main.py -t hello.ipp
+python3 src/main.py -t hello.ix
 
 # Print structure graph
-python3 src/main.py -p hello.ipp
+python3 src/main.py -p hello.ix
 
 # Compile with gcc and extra flags
-python3 src/main.py -c -C "$(sdl2-config --cflags --libs)" graphics.ipp
+python3 src/main.py -c -C "$(sdl2-config --cflags --libs)" graphics.ix
 
 # Install a library
 python3 src/main.py -i mylib.ih

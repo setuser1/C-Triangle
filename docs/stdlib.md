@@ -1,24 +1,24 @@
-# i++ Standard Library (plstd)
+# i++ Standard Library (iodine)
 
 <p align="center">
   <img src="../assets/logo.png" alt="i++ Logo" width="120"/>
 </p>
 
-**plstd** is the i++ standard library. It is implemented in i++ itself, with `asm` blocks only where syscalls or low-level primitives are needed.
+**iodine** is the i++ standard library. It is implemented in i++ itself, with `asm` blocks only where syscalls or low-level primitives are needed.
 
-> Unlike C/C++ headers (`.h` / `.hpp`), plstd libraries are written in i++ and can use all i++ features: `dynam` arrays, `typed struct` inheritance, custom types, etc. Libraries share the same language as user code — no separate preprocessor, header syntax, or implementation file needed. A `.ih` is complete and self-contained.
+> Unlike C/C++ headers (`.h` / `.hpp`), iodine libraries are written in i++ and can use all i++ features: `dynam` arrays, `typed struct` inheritance, custom types, etc. Libraries share the same language as user code — no separate preprocessor, header syntax, or implementation file needed. A `.ih` is complete and self-contained.
 
 ---
 
-## Importing plstd
+## Importing iodine
 
 ```c
-// Import standard library files by filename
-using <printd>;
-using <string>;
+// Import standard library files by path
+using <iodine/printd>;
+using <iodine/string>;
 
 // Import specific function
-using printd from <printd>;
+using printd from <iodine/printd>;
 
 // Explicit access - function@lib syntax
 printd@lib("value: %d\n", 42);
@@ -58,11 +58,11 @@ printfs("{x} squared = {x*x}\n"); // 42 squared = 1764
 
 ---
 
-## plstd Implementation
+## iodine Implementation
 
 - Written entirely in base **i++** + `asm` blocks for syscalls
-- Located in `PLIBS/` folder (e.g., `PLIBS/printd.ih`)
-- System path: `/usr/lib/PLIBS/`
-- User libraries: `~/.local/lib/PLIBS/`
+- Located in the `iodine/` subfolder (e.g., `PLIBS/iodine/printd.ih`)
+- System path: `/usr/lib/PLIBS/iodine/`
+- User path: `~/.local/lib/PLIBS/iodine/`
 
-> The `PLIBS/` directory holds all `.ih` library files. User libraries go in `~/.local/lib/PLIBS/`, system libraries in `/usr/lib/PLIBS/`.
+> The `PLIBS/` directory holds `.ih` libraries. The standard library is under `iodine/`; user and system library roots are `~/.local/lib/PLIBS/` and `/usr/lib/PLIBS/`.

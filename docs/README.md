@@ -15,13 +15,13 @@ Welcome to the official documentation for the **i++ (i++)** programming language
 make install
 
 # Compile a i++ source file
-python3 src/main.py hello.ipp
+python3 src/main.py hello.ix
 
 # Debug: view tokens and scope graph
-python3 src/main.py -t hello.ipp
+python3 src/main.py -t hello.ix
 
 # Print structure graph
-python3 src/main.py -p hello.ipp
+python3 src/main.py -p hello.ix
 ```
 
 ---
@@ -35,7 +35,7 @@ python3 src/main.py -p hello.ipp
 | [types.md](types.md)               | Type system — primitives, auto, string, dynam, tuple, typed structs |
 | [memory.md](memory.md)             | Memory model — allocate, free, autoremove, robbery               |
 | [assembly.md](assembly.md)         | Inline assembly — asm blocks, syntax targets, rules              |
-| [stdlib.md](stdlib.md)             | Standard library (plstd) — printd, printfs, len, error handling  |
+| [stdlib.md](stdlib.md)             | Standard library (iodine) — printd, printfs, len, error handling  |
 | [compiler.md](compiler.md)         | Compiler architecture, pipeline stages, and CLI reference        |
 | [errors.md](errors.md)             | Error reference — all compiler and runtime errors                |
 

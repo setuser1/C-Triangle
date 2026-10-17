@@ -509,8 +509,8 @@ def main():
 
     had_errors = False
     for path in args.files:
-        if not path.endswith((".ipp", ".ih")):
-            print(f"Error: Only .ipp/.ih files are supported, got '{path}'")
+        if not path.endswith((".ix", ".ih")):
+            print(f"Error: Only .ix/.ih files are supported, got '{path}'")
             continue
         try:
             tokens, output, objects, asm_blocks = compile_file(path, args.target)
@@ -561,9 +561,9 @@ def main():
                 write_output(c_path, output)
             else:
                 print(output)
-                # Handle both .ipp and .ih file extensions
-                if path.endswith(".ipp"):
-                    c_path = path.replace(".ipp", ".c")
+                # Handle both .ix and .ih file extensions
+                if path.endswith(".ix"):
+                    c_path = path.replace(".ix", ".c")
                 elif path.endswith(".ih"):
                     c_path = path.replace(".ih", ".c")
                 else:

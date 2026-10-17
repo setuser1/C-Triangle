@@ -10,7 +10,7 @@
 .opencode/
 .DS_Store
 
-.ipp
+.ix
 *.spec
 *.s
 

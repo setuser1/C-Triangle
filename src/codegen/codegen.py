@@ -100,7 +100,7 @@ class CodeGen:
         self._alias_to_lib = {}  # Maps alias (e.g., "lib") -> actual lib name (e.g., "mylib")
         self._top_level_lib_functions = {}  # Maps lib_name -> set of top-level function names
         self._exposed_funcs = {}  # Maps bare_name -> lib_name for exposed functions
-        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["plstd/streamer", "plstd/other"])
+        self._folder_libs = {}  # Maps folder alias -> list of plib names (e.g., "lib" -> ["iodine/streamer", "iodine/other"])
         self._namespace_imported_libs = set()  # Track libs imported as full namespaces
         self._standard_libs = set()  # Plib filenames loaded from the standard library folder
         self._used_functions = set()  # Track used function names for tree-shaking
@@ -1386,11 +1386,11 @@ class CodeGen:
 
             if source.startswith("<") and source.endswith(">"):
                 lib_name = source[1:-1]
-                if lib_name == "plstd":
+                if lib_name == "iodine":
                     raise SyntaxError(
-                        "plstd is a standard library directory, not a library name. "
-                        "Import standard library files by filename, such as using <printd> "
-                        "or using <string>."
+                        "iodine is a standard library directory, not a library name. "
+                        "Import standard library files by path, such as using <iodine/printd> "
+                        "or using <iodine/string>."
                     )
 
                 if lib_name not in seen_libs:
@@ -1474,7 +1474,7 @@ class CodeGen:
             exp_target = exp.target
 
             # Handle expose of a specifically imported function (using func from <lib>)
-            # e.g. "using printd from <printd>;" + "expose printd;" should work
+            # e.g. "using printd from <iodine/printd>;" + "expose printd;" should work
             # as if the user wrote "expose printd@lib;"
             if exp_target in self._specific_imports:
                 lib_name = self._specific_imports[exp_target][0]
@@ -1512,7 +1512,7 @@ class CodeGen:
                 # Find the actual lib key in _top_level_lib_functions
                 prefixed_lib = actual_lib  # Default prefix
                 for lib_key in self._top_level_lib_functions:
-                    # Check if this is a folder plib (e.g., plstd_printd from plstd/printd)
+                    # Check if this is a folder plib (e.g., iodine_printd from iodine/printd)
                     if lib_key.replace("_", "/").endswith(
                         f"/{func_name}"
                     ) or lib_key.endswith(f"_{func_name}"):
@@ -1609,7 +1609,7 @@ class CodeGen:
                     or lib_key == exp_base.replace("/", "_")
                 )
                 # Also match folder imports where lib_key is the last path component
-                # (e.g., exp_base="plstd" matches lib_key="printd" from "plstd/printd")
+                # (e.g., exp_base="iodine" matches lib_key="printd" from "iodine/printd")
                 if not matches and "/" in exp_base:
                     if lib_key == exp_base.split("/")[-1]:
                         matches = True
@@ -1899,7 +1899,7 @@ class CodeGen:
         for decl in plib_ast.declarations:
             if isinstance(decl, p.UsingDecl):
                 source = decl.source
-                # Skip system libraries like <plstd>
+                # Skip system libraries like <iodine>
                 if source.startswith("<") and source.endswith(">"):
                     continue
                 # Skip if already imported
@@ -2163,7 +2163,7 @@ class CodeGen:
 
                 if not plib_path:
                     for base in search_paths:
-                        candidate = os.path.join(base, "plstd", f"{search_name}.ih")
+                        candidate = os.path.join(base, "iodine", f"{search_name}.ih")
                         if os.path.exists(candidate):
                             plib_path = candidate
                             break
@@ -2212,7 +2212,7 @@ class CodeGen:
 
         # Pre-populate _top_level_lib_functions so @ syntax works
         # Use computed prefix (same as in _gen_plib_code)
-        # For "plstd/streamer", prefix is "streamer"; for "streamer", prefix is "streamer"
+        # For "iodine/streamer", prefix is "streamer"; for "streamer", prefix is "streamer"
         # FIX: Use the LAST part of the path as the library name
         if "/" in lib_name:
             parts = lib_name.split("/")
@@ -2270,7 +2270,7 @@ class CodeGen:
             }
         )
 
-        if plib_path and f"{os.sep}plstd{os.sep}" in plib_path:
+        if plib_path and f"{os.sep}iodine{os.sep}" in plib_path:
             self._standard_libs.add(prefix)
             self._alias_to_lib["lib"] = prefix
 
@@ -2369,7 +2369,7 @@ class CodeGen:
             if filename.endswith(".ih"):
                 plib_name = filename[:-5]  # Remove .ih extension
                 plib_path = os.path.join(folder_path, filename)
-                # Use underscores for consistent prefixing (e.g., plstd_streamer)
+                # Use underscores for consistent prefixing (e.g., iodine_streamer)
                 full_lib_name = f"{folder_name}_{plib_name}"
 
                 try:
@@ -2466,7 +2466,7 @@ class CodeGen:
 
                 if not plib_path:
                     for d in ["."] + self._get_plibs_search_dirs():
-                        candidate = os.path.join(d, "plstd", f"{search_name}.ih")
+                        candidate = os.path.join(d, "iodine", f"{search_name}.ih")
                         if os.path.exists(candidate):
                             plib_path = candidate
                             break
@@ -2674,7 +2674,7 @@ class CodeGen:
             self._gen_dynam_helper_functions(struct_name, mapped_elem, elem_type)
 
             # Generate initialization code
-            # At global scope in .ipp: emit declaration at file scope, track initialization for main()
+            # At global scope in .ix: emit declaration at file scope, track initialization for main()
             # At global scope in .ih: emit declaration at file scope, track for init function
             # At local scope: emit directly
             is_plib = self._generating_plib or self._is_plib_source
